@@ -1,0 +1,38 @@
+{
+    "name": "jmhc/hyperf-api",
+    "description": "Hyperf restful api.",
+    "keywords": [
+        "restful",
+        "api",
+        "hyperf"
+    ],
+    "homepage": "http://jumihc.com/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "jumihc",
+            "email": "jumihuchuang@126.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Jmhc\\Restful\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "require": {
+        "php": ">=7.2",
+        "ext-swoole": ">=4.4",
+        "ext-json": "*",
+        "ext-redis": "*",
+        "ext-openssl": "*",
+        "hyperf/database": "^1.1",
+        "hyperf/framework": "^1.1",
+        "hyperf/http-server": "^1.1",
+        "hyperf/di": "^1.1",
+        "doctrine/dbal": "^2.10",
+        "hyperf/command": "^1.1"
+    }
+}
