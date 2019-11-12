@@ -9,7 +9,7 @@ namespace Jmhc\Restful\Handlers;
 use ErrorException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Exception\QueryException;
-use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
@@ -19,7 +19,6 @@ use Jmhc\Restful\Utils\RedisLock;
 use Jmhc\Restful\Utils\Token;
 use LogicException;
 use ParseError;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionException;
 use RuntimeException;
@@ -38,28 +37,44 @@ class ExceptionHandler extends \Hyperf\ExceptionHandler\ExceptionHandler
     protected $httpCode = ResultCode::HTTP_ERROR_CODE;
 
     /**
-     * @Inject()
      * @var RequestInterface
      */
     protected $request;
 
     /**
-     * @Inject()
+     * @var \Hyperf\HttpServer\Contract\ResponseInterface
+     */
+    protected $response;
+
+    /**
      * @var ConfigInterface
      */
     protected $configInterface;
 
     /**
-     * @Inject()
      * @var Cipher
      */
     protected $cipher;
 
     /**
-     * @Inject()
      * @var Token
      */
     protected $token;
+
+    public function __construct(
+        RequestInterface $request,
+        \Hyperf\HttpServer\Contract\ResponseInterface $response,
+        ConfigInterface $configInterface,
+        Cipher $cipher,
+        Token $token
+    )
+    {
+        $this->request = $request;
+        $this->response = $response;
+        $this->configInterface = $configInterface;
+        $this->cipher = $cipher;
+        $this->token = $token;
+    }
 
     public function handle(Throwable $throwable, ResponseInterface $response)
     {
@@ -92,10 +107,11 @@ class ExceptionHandler extends \Hyperf\ExceptionHandler\ExceptionHandler
         // 设置响应头
         foreach ($headers as $k => $v)
         {
-            $response = $response->withHeader($k, $v);
+            $this->response = $this->response->withHeader($k, $v);
         }
 
-        return $response->withStatus($this->httpCode)
+        return $this->response
+            ->withStatus($this->httpCode)
             ->json($res);
     }
 
@@ -169,7 +185,7 @@ class ExceptionHandler extends \Hyperf\ExceptionHandler\ExceptionHandler
      */
     protected function refreshToken($request, string $token, array &$headers)
     {
-        $headers[$this->token->getRefreshName()] = $token;
+        $headers['token'] = $token;
     }
 
     /**

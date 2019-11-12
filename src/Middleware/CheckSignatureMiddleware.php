@@ -7,7 +7,7 @@
 namespace Jmhc\Restful\Middleware;
 
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Helper;
@@ -28,44 +28,59 @@ class CheckSignatureMiddleware implements MiddlewareInterface
     use ResultThrowTrait;
 
     /**
-     * @Inject()
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * @var ConfigInterface
      */
     protected $configInterface;
 
     /**
-     * @Inject()
      * @var Redis
      */
     protected $redis;
 
     /**
-     * @Inject()
      * @var Log
      */
     protected $log;
 
+    public function __construct(
+        RequestInterface $request,
+        ConfigInterface $configInterface,
+        Redis $redis,
+        Log $log
+    )
+    {
+        $this->request = $request;
+        $this->configInterface = $configInterface;
+        $this->redis = $redis;
+        $this->log = $log;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (! $this->configInterface->get('jmhc-api.signature.check')) {
-            return $handler->handle($request);
+            return $handler->handle($this->request);
         }
 
         // 判断时间戳是否超时
         $timeout = $this->configInterface->get('jmhc-api.signature.timestamp_timeout', 60);
-        $timestamp = $request->originParams['timestamp'] ?? 0;
+        $timestamp = $this->request->originParams['timestamp'] ?? 0;
         $time = time();
         if ($timestamp > ($time + $timeout) || ($timestamp + $timeout) < $time) {
             $this->error('请求已过期~');
         }
 
         // 判断随机数是否有效
-        $nonce = $request->originParams['nonce'] ?? '';
+        $nonce = $this->request->originParams['nonce'] ?? '';
         $this->validateNonce($nonce, $timestamp, $timeout);
 
         // 验证签名是否正确
-        $sign = $request->originParams['sign'] ?? '';
-        $data = $request->params ?? [];
+        $sign = $this->request->originParams['sign'] ?? '';
+        $data = $this->request->params ?? [];
         $data['timestamp'] = $timestamp;
         $data['nonce'] = $nonce;
         $key = $this->configInterface->get('jmhc-api.signature.key', '');
@@ -73,12 +88,12 @@ class CheckSignatureMiddleware implements MiddlewareInterface
             // 签名验证失败记录
             $this->log->save(
                 'signature.error',
-                $this->getSignatureErrorMsg($request, $sign, $data, $key)
+                $this->getSignatureErrorMsg($sign, $data, $key)
             );
             $this->error('签名验证失败~');
         }
 
-        return $handler->handle($request);
+        return $handler->handle($this->request);
     }
 
     /**
@@ -117,13 +132,12 @@ class CheckSignatureMiddleware implements MiddlewareInterface
 
     /**
      * 获取签名错误消息
-     * @param ServerRequestInterface $request
      * @param string $sign
      * @param array $data
      * @param string $key
      * @return string
      */
-    protected function getSignatureErrorMsg(ServerRequestInterface $request, string $sign, array $data, string $key)
+    protected function getSignatureErrorMsg(string $sign, array $data, string $key)
     {
         // 签名数据
         $signData = Signature::sign($data, $key, false);
@@ -131,12 +145,12 @@ class CheckSignatureMiddleware implements MiddlewareInterface
         $sort = json_encode($signData['sort'], JSON_UNESCAPED_UNICODE);
 
         // 获取ip
-        $ip = Helper::ip($request);
+        $ip = Helper::ip($this->request);
 
         return <<<EOL
 ip: {$ip}
-url: {$request->fullUrl()}
-method: {$request->method()}
+url: {$this->request->fullUrl()}
+method: {$this->request->method()}
 源数据: {$origin}
 排序后数据: {$sort}
 构造签名字符串: {$signData['build']}

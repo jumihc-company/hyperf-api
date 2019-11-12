@@ -8,7 +8,6 @@ namespace Jmhc\Restful;
 
 use Jmhc\Restful\Contracts\UserInterface;
 use Jmhc\Restful\Contracts\VersionInterface;
-use Jmhc\Restful\Handlers\ExceptionHandler;
 use Jmhc\Restful\Middleware\CoreMiddleware;
 use Jmhc\Restful\Models\UserModel;
 use Jmhc\Restful\Models\VersionModel;
@@ -28,13 +27,6 @@ class ConfigProvider
                 Log::class => Log::class,
                 UserInterface::class => UserModel::class,
                 VersionInterface::class => VersionModel::class,
-            ],
-            'exceptions' => [
-                'handler' => [
-                    'http' => [
-                        ExceptionHandler::class,
-                    ],
-                ],
             ],
             'annotations' => [
                 'scan' => [

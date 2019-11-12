@@ -6,8 +6,6 @@
 
 namespace Jmhc\Restful\Middleware;
 
-use Hyperf\Contract\ConfigInterface;
-use Hyperf\Di\Annotation\Inject;
 use Hyperf\Utils\Context;
 use Jmhc\Restful\PlatformInfo;
 use Psr\Http\Message\RequestInterface;
@@ -23,51 +21,53 @@ use Psr\Http\Server\RequestHandlerInterface;
 class RequestPlatformMiddleware implements MiddlewareInterface
 {
     /**
-     * @Inject()
-     * @var ConfigInterface
+     * @var \Hyperf\HttpServer\Contract\RequestInterface
      */
-    protected $configInterface;
+    protected $request;
+
+    public function __construct(
+        \Hyperf\HttpServer\Contract\RequestInterface $request
+    )
+    {
+        $this->request = $request;
+    }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // 请求平台
-        $requestPlatform = $this->getRequestPlatform(
-            $request,
-            $this->configInterface->get('jmhc-api.request_name.platform', 'request-platform')
-        );
+        $requestPlatform = $this->getRequestPlatform('request-platform');
 
         // 所有 user_agent
         $allPlatform = PlatformInfo::getAllPlatform();
 
         // 请求平台
-        $request->platform = PlatformInfo::OTHER;
+        $this->request->platform = PlatformInfo::OTHER;
         foreach ($allPlatform as $k => $v) {
             if (preg_match(sprintf('/(%s)/', $k), $requestPlatform)) {
-                $request->platform = $v;
+                $this->request->platform = $v;
                 break;
             }
         }
 
         // 更新请求上下文
-        Context::set(RequestInterface::class, $request);
+        Context::set(RequestInterface::class, $this->request);
 
-        return $handler->handle($request);
+        return $handler->handle($this->request);
     }
 
     /**
      * 获取请求平台
-     * @param ServerRequestInterface $request
      * @param string $name
      * @return array|string|null
      */
-    protected function getRequestPlatform(ServerRequestInterface $request, string $name)
+    protected function getRequestPlatform(string $name)
     {
-        $platform = $request->header($name);
+        $platform = $this->request->header($name);
         if (empty($platform)) {
-            $platform = $request->input($name);
+            $platform = $this->request->input($name);
         }
         if(empty($platform)) {
-            $platform = $request->server('HTTP_USER_AGENT');
+            $platform = $this->request->server('HTTP_USER_AGENT');
         }
 
         return $platform;

@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Middleware;
 
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Di\Annotation\Inject;
 use Hyperf\Utils\Context;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,22 +19,35 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class CorsMiddleware implements MiddlewareInterface
 {
+
     /**
-     * @Inject()
+     * @var \Hyperf\HttpServer\Contract\ResponseInterface
+     */
+    protected $response;
+
+    /**
      * @var ConfigInterface
      */
     protected $configInterface;
 
+    public function __construct(
+        \Hyperf\HttpServer\Contract\ResponseInterface $response,
+        ConfigInterface $configInterface
+    )
+    {
+        $this->response = $response;
+        $this->configInterface = $configInterface;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = Context::get(ResponseInterface::class);
         foreach ($this->configInterface->get('cors', []) as $k => $v) {
-            $response = $response->withHeader($k, $v);
+            $this->response = $this->response->withHeader($k, $v);
         }
-        Context::set(ResponseInterface::class, $response);
+        Context::set(ResponseInterface::class, $this->response);
 
         if ($request->getMethod() == 'OPTIONS') {
-            return $response;
+            return $this->response;
         }
 
         return $handler->handle($request);

@@ -6,8 +6,7 @@
 
 namespace Jmhc\Restful\Middleware;
 
-use Hyperf\Contract\ConfigInterface;
-use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Jmhc\Restful\Contracts\VersionInterface;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
@@ -26,24 +25,28 @@ class CheckVersionMiddleware implements MiddlewareInterface
     use ResultThrowTrait;
 
     /**
-     * @Inject()
-     * @var ConfigInterface
+     * @var RequestInterface
      */
-    protected $configInterface;
+    protected $request;
 
     /**
-     * @Inject()
      * @var VersionInterface
      */
     protected $versionModel;
 
+    public function __construct(
+        RequestInterface $request,
+        VersionInterface $versionModel
+    )
+    {
+        $this->request = $request;
+        $this->versionModel = $versionModel;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // 当前版本
-        $version = $this->getVersion(
-            $request,
-            $this->configInterface->get('jmhc-api.request_name.version', 'version')
-        );
+        $version = $this->getVersion('version');
 
         // 判断版本号是否存在
         if (empty($version)) {
@@ -61,20 +64,19 @@ class CheckVersionMiddleware implements MiddlewareInterface
             }
         }
 
-        return $handler->handle($request);
+        return $handler->handle($this->request);
     }
 
     /**
      * 获取version
-     * @param ServerRequestInterface $request
      * @param string $name
      * @return array|string|null
      */
-    protected function getVersion(ServerRequestInterface $request, string $name)
+    protected function getVersion(string $name)
     {
-        $version = $request->header($name, 0);
+        $version = $this->request->header($name, 0);
         if (empty($version)) {
-            $version = $request->input($name, 0);
+            $version = $this->request->input($name, 0);
         }
 
         return $version;

@@ -58,8 +58,6 @@ return [
         'pos' => env('JMHC_TOKEN_POS', 5),
         // 令牌填充长度
         'len' => env('JMHC_TOKEN_LEN', 6),
-        // 令牌刷新名称
-        'refresh_name' => env('JMHC_TOKEN_REFRESH_NAME', 'token'),
         // 令牌允许刷新时间（秒） 3天
         'allow_refresh_time' => env('JMHC_TOKEN_ALLOW_REFRESH_TIME', 259200),
         // 令牌提示刷新时间（秒） 2天
@@ -82,15 +80,5 @@ return [
         'seconds' => env('JMHC_REQUEST_LOCK_SECONDS', 5),
         // 请求锁定提示
         'tips' => env('JMHC_REQUEST_LOCK_TIPS', '请求已被锁定，请稍后重试~'),
-    ],
-
-    // 请求名称
-    'request_name' => [
-        // 平台
-        'platform' => env('JMHC_REQUEST_NAME_PLATFORM', 'request-platform'),
-        // 令牌
-        'token' => env('JMHC_REQUEST_NAME_TOKEN', 'token'),
-        // 版本
-        'version' => env('JMHC_REQUEST_NAME_VERSION', 'version'),
     ],
 ];

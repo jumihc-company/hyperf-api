@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Hyperf\Di\Annotation\Inject;
 use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Str;
 use Jmhc\Restful\ResultCode;
@@ -20,16 +19,23 @@ use Jmhc\Restful\Utils\Cipher\Token as TokenCipher;
 class Token
 {
     /**
-     * @Inject()
      * @var RequestInterface
      */
     protected $request;
 
     /**
-     * @Inject()
      * @var TokenCipher
      */
     protected $core;
+
+    public function __construct(
+        RequestInterface $request,
+        TokenCipher $core
+    )
+    {
+        $this->request = $request;
+        $this->core = $core;
+    }
 
     /**
      * 获取token
@@ -107,15 +113,6 @@ class Token
     public function getAllowRefreshTime()
     {
         return $this->core->getConfig('allow_refresh_time', 0);
-    }
-
-    /**
-     * 刷新token
-     * @return mixed
-     */
-    public function getRefreshName()
-    {
-        return $this->core->getConfig('refresh_name', 'token');
     }
 
     /**

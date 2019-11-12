@@ -6,7 +6,7 @@
 
 namespace Jmhc\Restful\Middleware;
 
-use Hyperf\Di\Annotation\Inject;
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrowTrait;
@@ -26,27 +26,41 @@ class CheckSdlMiddleware implements MiddlewareInterface
     use ResultThrowTrait;
 
     /**
-     * @Inject()
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * @var Token
      */
     protected $token;
 
     /**
-     * @Inject()
      * @var SdlCache
      */
     protected $sdlCache;
+
+    public function __construct(
+        RequestInterface $request,
+        Token $token,
+        SdlCache $sdlCache
+    )
+    {
+        $this->request = $request;
+        $this->token = $token;
+        $this->sdlCache = $sdlCache;
+    }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $token = $this->token->get();
         // token和用户id存在
-        if (! empty($token) && ! empty($request->userInfo->id)) {
-            if (! $this->sdlCache->verify($request->userInfo->id, $token)) {
+        if (! empty($token) && ! empty($this->request->userInfo->id)) {
+            if (! $this->sdlCache->verify($this->request->userInfo->id, $token)) {
                 $this->error(ResultMsg::SDL, ResultCode::SDL);
             }
         }
 
-        return $handler->handle($request);
+        return $handler->handle($this->request);
     }
 }

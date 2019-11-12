@@ -6,10 +6,8 @@
 
 namespace Jmhc\Restful\Middleware;
 
-use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Model;
-use Hyperf\Di\Annotation\Inject;
 use Hyperf\Utils\Context;
 use Jmhc\Restful\Contracts\UserInterface;
 use Jmhc\Restful\Exceptions\ResultException;
@@ -34,28 +32,36 @@ class CheckTokenMiddleware implements MiddlewareInterface
     use ResultThrowTrait;
 
     /**
-     * @Inject()
-     * @var ConfigInterface
+     * @var \Hyperf\HttpServer\Contract\RequestInterface
      */
-    protected $configInterface;
+    protected $request;
 
     /**
-     * @Inject()
      * @var Token
      */
     protected $token;
 
     /**
-     * @Inject()
      * @var UserInterface
      */
     protected $userModel;
+
+    public function __construct(
+        \Hyperf\HttpServer\Contract\RequestInterface $request,
+        Token $token,
+        UserInterface $userModel
+    )
+    {
+        $this->request = $request;
+        $this->token = $token;
+        $this->userModel = $userModel;
+    }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         try {
             // 用户信息
-            $request->userInfo = $this->check($request);
+            $this->request->userInfo = $this->check();
         } catch (ResultException $e) {
             // 强制登录 TODO: 中间件参数
             if (true) {
@@ -63,27 +69,24 @@ class CheckTokenMiddleware implements MiddlewareInterface
             }
 
             // 用户信息
-            $request->userInfo = new Collection();
+            $this->request->userInfo = new Collection();
         }
 
         // 更新请求上下文
-        Context::set(RequestInterface::class, $request);
+        Context::set(RequestInterface::class, $this->request);
 
-        return $handler->handle($request);
+        return $handler->handle($this->request);
     }
 
     /**
      * 验证
-     * @param ServerRequestInterface $request
      * @return Builder|Model|object|null
      * @throws ResultException
      */
-    protected function check(ServerRequestInterface &$request)
+    protected function check()
     {
         // token
-        $token = $this->token->get(
-            $this->configInterface->get('jmhc-api.request_name.token', 'token')
-        );
+        $token = $this->token->get('token');
 
         // 判断token是否存在
         if (empty($token)) {
@@ -115,7 +118,7 @@ class CheckTokenMiddleware implements MiddlewareInterface
         $noticeTime = $this->configInterface->get('jmhc-api.token.notice_refresh_time', 0);
         if ((time() - $time) >= $noticeTime) {
             // 设置刷新的token
-            $request->refreshToken = $this->token->create($id);
+            $this->request->refreshToken = $this->token->create($id);
         }
 
         return $info;

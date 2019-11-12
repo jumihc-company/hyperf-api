@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Utils\Cipher;
 
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Di\Annotation\Inject;
 
 /**
  * 加密基类
@@ -16,7 +15,6 @@ use Hyperf\Di\Annotation\Inject;
 abstract class Base
 {
     /**
-     * @Inject()
      * @var ConfigInterface
      */
     protected $configInterface;
@@ -48,8 +46,12 @@ abstract class Base
 
     abstract public function decrypt(string $str);
 
-    public function __construct()
+    public function __construct(
+        ConfigInterface $configInterface
+    )
     {
+        $this->configInterface = $configInterface;
+
         // 初始化
         $this->initialize();
     }
@@ -60,7 +62,7 @@ abstract class Base
     protected function initialize()
     {
         // 场景
-        $scene = strtolower(get_called_class());
+        $scene = strtolower(class_basename(get_called_class()));
         // 配置
         $this->config = $this->configInterface->get(
             sprintf('jmhc-api.%s', $scene),

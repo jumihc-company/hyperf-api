@@ -40,8 +40,6 @@ JMHC_TOKEN_KEY=
 JMHC_TOKEN_POS=5
 # 令牌填充长度
 JMHC_TOKEN_LEN=6
-# 令牌刷新名称
-JMHC_TOKEN_REFRESH_NAME=token
 # 令牌允许刷新时间（秒） 3天
 JMHC_TOKEN_ALLOW_REFRESH_TIME=259200
 # 令牌提示刷新时间（秒） 2天
@@ -62,15 +60,6 @@ JMHC_SIGNATURE_TIMESTAMP_TIMEOUT=60
 JMHC_REQUEST_LOCK_SECONDS=5
 # 请求锁定提示
 JMHC_REQUEST_LOCK_TIPS=请求已被锁定，请稍后重试~
-```
-
-```apacheconfig
-# 请求名称 平台
-JMHC_REQUEST_NAME_PLATFORM=request-platform
-# 请求名称 令牌
-JMHC_REQUEST_NAME_TOKEN=token
-# 请求名称 版本
-JMHC_REQUEST_NAME_VERSION=version
 ```
 
 ```apacheconfig

@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Middleware;
 
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Jmhc\Restful\Utils\Helper;
 use Jmhc\Restful\Utils\LogHelper;
 use Psr\Http\Message\ResponseInterface;
@@ -19,31 +20,42 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class RequestLogMiddleware implements MiddlewareInterface
 {
+    /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    public function __construct(
+        RequestInterface $request
+    )
+    {
+        $this->request = $request;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         // 记录请求日志
         LogHelper::request()
-            ->debug('', $this->buildContent($request));
+            ->debug('', $this->buildContent());
 
-        return $handler->handle($request);
+        return $handler->handle($this->request);
     }
 
     /**
      * 生成消息
-     * @param ServerRequestInterface $request
      * @return string
      */
-    protected function buildContent(ServerRequestInterface $request)
+    protected function buildContent()
     {
-        $ip = Helper::ip($request);
-        $data = json_encode($request->all(), JSON_UNESCAPED_UNICODE);
+        $ip = Helper::ip($this->request);
+        $data = json_encode($this->request->all(), JSON_UNESCAPED_UNICODE);
 
         return <<<EOF
 ip : {$ip}
-referer : {$request->server('HTTP_REFERER', '-')}
-user_agent : {$request->server('HTTP_USER_AGENT', '-')}
-method : {$request->getMethod()}
-url : {$request->fullUrl()}
+referer : {$this->request->server('HTTP_REFERER', '-')}
+user_agent : {$this->request->server('HTTP_USER_AGENT', '-')}
+method : {$this->request->getMethod()}
+url : {$this->request->fullUrl()}
 data : {$data}
 EOF;
     }

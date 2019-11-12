@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Utils;
 
 use Hyperf\Contract\ConfigInterface;
-use Hyperf\Di\Annotation\Inject;
 use Redis;
 
 /**
@@ -17,13 +16,11 @@ use Redis;
 class SdlCache
 {
     /**
-     * @Inject()
      * @var ConfigInterface
      */
     protected $configInterface;
 
     /**
-     * @Inject()
      * @var Redis
      */
     protected $redis;
@@ -39,6 +36,15 @@ class SdlCache
      * @var string
      */
     protected $cacheTempKey = 'sdl_temp_%d';
+
+    public function __construct(
+        ConfigInterface $configInterface,
+        Redis $redis
+    )
+    {
+        $this->configInterface = $configInterface;
+        $this->redis = $redis;
+    }
 
     /**
      * 获取缓存数据

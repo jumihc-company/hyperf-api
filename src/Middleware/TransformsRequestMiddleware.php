@@ -20,13 +20,25 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class TransformsRequestMiddleware implements MiddlewareInterface
 {
+    /**
+     * @var \Hyperf\HttpServer\Contract\RequestInterface
+     */
+    protected $request;
+
+    public function __construct(
+        \Hyperf\HttpServer\Contract\RequestInterface $request
+    )
+    {
+        $this->request = $request;
+    }
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $request->params = $this->cleanArray($request->params ?? []);
+        $this->request->params = $this->cleanArray($this->request->params ?? []);
         // 更新请求上下文
-        Context::set(RequestInterface::class, $request);
+        Context::set(RequestInterface::class, $this->request);
 
-        return $handler->handle($request);
+        return $handler->handle($this->request);
     }
 
     /**

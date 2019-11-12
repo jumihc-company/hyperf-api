@@ -41,8 +41,13 @@ class FileHandler
      */
     protected $savePath;
 
-    public function __construct(array $config = [])
+    public function __construct(
+        ConfigInterface $configInterface,
+        array $config = []
+    )
     {
+        $this->configInterface = $configInterface;
+
         $this->initialize($config);
     }
 

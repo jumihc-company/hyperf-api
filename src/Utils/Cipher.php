@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Hyperf\Di\Annotation\Inject;
 use Jmhc\Restful\Utils\Cipher\Runtime;
 
 /**
@@ -16,10 +15,16 @@ use Jmhc\Restful\Utils\Cipher\Runtime;
 class Cipher
 {
     /**
-     * @Inject()
      * @var Runtime
      */
     protected $core;
+
+    public function __construct(
+        Runtime $core
+    )
+    {
+        $this->core = $core;
+    }
 
     /**
      * 请求
@@ -55,6 +60,6 @@ class Cipher
      */
     protected function isExec()
     {
-        return $this->core->getConfig('debug', true);
+        return ! $this->core->getConfig('debug', true);
     }
 }

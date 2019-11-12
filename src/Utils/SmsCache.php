@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Hyperf\Di\Annotation\Inject;
 use Redis;
 
 /**
@@ -16,7 +15,6 @@ use Redis;
 class SmsCache
 {
     /**
-     * @Inject()
      * @var Redis
      */
     protected $redis;
@@ -65,8 +63,14 @@ class SmsCache
      */
     protected $validTime = 1800;
 
-    public function __construct(array $interval = [], int $validTime = 0)
+    public function __construct(
+        Redis $redis,
+        array $interval = [],
+        int $validTime = 0
+    )
     {
+        $this->redis = $redis;
+
         if (! empty($interval)) {
             $this->interval = $interval;
         }
