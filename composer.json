@@ -34,5 +34,10 @@
         "hyperf/di": "^1.1",
         "doctrine/dbal": "^2.10",
         "hyperf/command": "^1.1"
+    },
+    "extra": {
+        "hyperf": {
+            "config": "Jmhc\\Restful\\ConfigProvider"
+        }
     }
 }
