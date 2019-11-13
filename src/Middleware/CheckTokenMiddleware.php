@@ -8,6 +8,7 @@ namespace Jmhc\Restful\Middleware;
 
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Model;
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Context;
 use Jmhc\Restful\Contracts\UserInterface;
 use Jmhc\Restful\Exceptions\ResultException;
@@ -17,7 +18,6 @@ use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Collection;
 use Jmhc\Restful\Utils\Token;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -32,7 +32,7 @@ class CheckTokenMiddleware implements MiddlewareInterface
     use ResultThrowTrait;
 
     /**
-     * @var \Hyperf\HttpServer\Contract\RequestInterface
+     * @var RequestInterface
      */
     protected $request;
 
@@ -47,7 +47,7 @@ class CheckTokenMiddleware implements MiddlewareInterface
     protected $userModel;
 
     public function __construct(
-        \Hyperf\HttpServer\Contract\RequestInterface $request,
+        RequestInterface $request,
         Token $token,
         UserInterface $userModel
     )
@@ -73,7 +73,7 @@ class CheckTokenMiddleware implements MiddlewareInterface
         }
 
         // 更新请求上下文
-        Context::set(RequestInterface::class, $this->request);
+        Context::set(ServerRequestInterface::class, $this->request);
 
         return $handler->handle($this->request);
     }

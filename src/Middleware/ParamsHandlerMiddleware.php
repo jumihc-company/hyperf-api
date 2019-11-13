@@ -6,9 +6,9 @@
 
 namespace Jmhc\Restful\Middleware;
 
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Context;
 use Jmhc\Restful\Utils\Cipher;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,7 +21,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class ParamsHandlerMiddleware implements MiddlewareInterface
 {
     /**
-     * @var \Hyperf\HttpServer\Contract\RequestInterface
+     * @var RequestInterface
      */
     protected $request;
 
@@ -37,7 +37,7 @@ class ParamsHandlerMiddleware implements MiddlewareInterface
     protected $filter = ['sign', 'nonce', 'timestamp', 'file'];
 
     public function __construct(
-        \Hyperf\HttpServer\Contract\RequestInterface $request,
+        RequestInterface $request,
         Cipher $cipher
     )
     {
@@ -54,7 +54,7 @@ class ParamsHandlerMiddleware implements MiddlewareInterface
         $params = $jsonParams ?? $this->request->all();
 
         // 请求解密
-        if ($this->request->exists('params') && ! $jsonParams) {
+        if ($this->request->has('params') && ! $jsonParams) {
             $params = $this->cipher->request($this->request->input('params'));
         }
 
@@ -67,7 +67,7 @@ class ParamsHandlerMiddleware implements MiddlewareInterface
         }, ARRAY_FILTER_USE_KEY);
 
         // 更新请求上下文
-        Context::set(RequestInterface::class, $this->request);
+        Context::set(ServerRequestInterface::class, $this->request);
 
         return $handler->handle($this->request);
     }

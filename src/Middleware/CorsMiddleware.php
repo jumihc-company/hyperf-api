@@ -44,6 +44,8 @@ class CorsMiddleware implements MiddlewareInterface
         foreach ($this->configInterface->get('cors', []) as $k => $v) {
             $this->response = $this->response->withHeader($k, $v);
         }
+
+        // 更新响应上下文
         Context::set(ResponseInterface::class, $this->response);
 
         if ($request->getMethod() == 'OPTIONS') {

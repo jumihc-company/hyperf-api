@@ -7,12 +7,12 @@
 namespace Jmhc\Restful\Middleware;
 
 use Hyperf\Contract\ConfigInterface;
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Context;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Helper;
 use Jmhc\Restful\Utils\RedisLock;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -28,7 +28,7 @@ class RequestLockMiddleware implements MiddlewareInterface
     use ResultThrowTrait;
 
     /**
-     * @var \Hyperf\HttpServer\Contract\RequestInterface
+     * @var RequestInterface
      */
     protected $request;
 
@@ -43,7 +43,7 @@ class RequestLockMiddleware implements MiddlewareInterface
     protected $configInterface;
 
     public function __construct(
-        \Hyperf\HttpServer\Contract\RequestInterface $request,
+        RequestInterface $request,
         Redis $redis,
         ConfigInterface $configInterface
     )
@@ -74,7 +74,7 @@ class RequestLockMiddleware implements MiddlewareInterface
         }
 
         // 更新请求上下文
-        Context::set(RequestInterface::class, $this->request);
+        Context::set(ServerRequestInterface::class, $this->request);
 
         return $handler->handle($this->request);
     }

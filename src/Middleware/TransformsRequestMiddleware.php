@@ -6,9 +6,9 @@
 
 namespace Jmhc\Restful\Middleware;
 
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Collection;
 use Hyperf\Utils\Context;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -21,12 +21,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 class TransformsRequestMiddleware implements MiddlewareInterface
 {
     /**
-     * @var \Hyperf\HttpServer\Contract\RequestInterface
+     * @var RequestInterface
      */
     protected $request;
 
     public function __construct(
-        \Hyperf\HttpServer\Contract\RequestInterface $request
+        RequestInterface $request
     )
     {
         $this->request = $request;
@@ -36,7 +36,7 @@ class TransformsRequestMiddleware implements MiddlewareInterface
     {
         $this->request->params = $this->cleanArray($this->request->params ?? []);
         // 更新请求上下文
-        Context::set(RequestInterface::class, $this->request);
+        Context::set(ServerRequestInterface::class, $this->request);
 
         return $handler->handle($this->request);
     }
