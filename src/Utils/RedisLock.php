@@ -6,7 +6,7 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Redis;
+use Hyperf\Redis\Redis;
 
 /**
  * redis 锁
@@ -15,7 +15,7 @@ use Redis;
 class RedisLock
 {
     /**
-     * @var Redis
+     * @var Redis|\Redis
      */
     protected $redis;
 

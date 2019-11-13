@@ -62,7 +62,7 @@ trait RequestInfoTrait
      */
     public function setRequestInfo()
     {
-        $this->params = new Collection($this->request->all());
+        $this->params = new Collection($this->request->params);
         $this->ip = Helper::ip($this->request);
         $this->platform = $this->request->platform ?? PlatformInfo::OTHER;
 

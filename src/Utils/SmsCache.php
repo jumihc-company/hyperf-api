@@ -6,7 +6,7 @@
 
 namespace Jmhc\Restful\Utils;
 
-use Redis;
+use Hyperf\Redis\Redis;
 
 /**
  * 短信缓存
@@ -15,7 +15,7 @@ use Redis;
 class SmsCache
 {
     /**
-     * @var Redis
+     * @var Redis|\Redis
      */
     protected $redis;
 

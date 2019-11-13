@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Middleware;
 
+use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Model;
 use Hyperf\HttpServer\Contract\RequestInterface;
@@ -36,6 +37,11 @@ class CheckTokenMiddleware implements MiddlewareInterface
     protected $request;
 
     /**
+     * @var ConfigInterface
+     */
+    protected $configInterface;
+
+    /**
      * @var Token
      */
     protected $token;
@@ -47,11 +53,13 @@ class CheckTokenMiddleware implements MiddlewareInterface
 
     public function __construct(
         RequestInterface $request,
+        ConfigInterface $configInterface,
         Token $token,
         UserInterface $userModel
     )
     {
         $this->request = $request;
+        $this->configInterface = $configInterface;
         $this->token = $token;
         $this->userModel = $userModel;
     }

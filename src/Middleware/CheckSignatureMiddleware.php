@@ -8,6 +8,7 @@ namespace Jmhc\Restful\Middleware;
 
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\Redis\Redis;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Helper;
@@ -17,7 +18,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Redis;
 
 /**
  * 检测签名中间件
@@ -38,7 +38,7 @@ class CheckSignatureMiddleware implements MiddlewareInterface
     protected $configInterface;
 
     /**
-     * @var Redis
+     * @var Redis|\Redis
      */
     protected $redis;
 

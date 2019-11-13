@@ -23,23 +23,20 @@ class Helper
     public static function ip(RequestInterface $request)
     {
         // 获取客户端ip
-        $ip = $request->server('REMOTE_ADDR');
+        $ip = $request->server('remote_addr', '');
         if (static::checkIp($ip)) {
             return $ip;
         }
 
         // 获取真实ip
-        $ip = $request->server('HTTP_X_REAL_IP');
-        if (static::checkIp($ip)) {
-            return $ip;
+        $ips = $request->getHeader('x_real_ip');
+        if (! empty($ips[0]) && static::checkIp($ips[0])) {
+            return $ips[0];
         }
 
         // 获取转发ip
-        $ips = explode(
-            ',',
-            $request->server('HTTP_X_FORWARDED_FOR', '')
-        );
-        if (! empty($ips) && static::checkIp($ips[0])) {
+        $ips = $request->getHeader('x_forwarded_for');
+        if (! empty($ips[0]) && static::checkIp($ips[0])) {
             return $ips[0];
         }
 

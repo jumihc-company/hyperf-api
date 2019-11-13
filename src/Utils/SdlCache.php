@@ -7,7 +7,7 @@
 namespace Jmhc\Restful\Utils;
 
 use Hyperf\Contract\ConfigInterface;
-use Redis;
+use Hyperf\Redis\Redis;
 
 /**
  * 单设备缓存
@@ -21,7 +21,7 @@ class SdlCache
     protected $configInterface;
 
     /**
-     * @var Redis
+     * @var Redis|\Redis
      */
     protected $redis;
 

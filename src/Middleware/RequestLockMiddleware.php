@@ -8,6 +8,7 @@ namespace Jmhc\Restful\Middleware;
 
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\Redis\Redis;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Helper;
@@ -16,7 +17,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Redis;
 
 /**
  * 请求锁定中间件
@@ -32,7 +32,7 @@ class RequestLockMiddleware implements MiddlewareInterface
     protected $request;
 
     /**
-     * @var Redis
+     * @var Redis|\Redis
      */
     protected $redis;
 
