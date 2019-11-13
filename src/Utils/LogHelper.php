@@ -18,7 +18,7 @@ class LogHelper
     /**
      * @var string
      */
-    protected static $dir = 'storage/logs/%s';
+    protected static $dir = 'runtime/logs/%s';
 
     /**
      * 获取日志容器

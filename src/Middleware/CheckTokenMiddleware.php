@@ -9,7 +9,6 @@ namespace Jmhc\Restful\Middleware;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Model;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\Utils\Context;
 use Jmhc\Restful\Contracts\UserInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Models\UserModel;
@@ -72,10 +71,7 @@ class CheckTokenMiddleware implements MiddlewareInterface
             $this->request->userInfo = new Collection();
         }
 
-        // 更新请求上下文
-        Context::set(ServerRequestInterface::class, $this->request);
-
-        return $handler->handle($this->request);
+        return $handler->handle($request);
     }
 
     /**

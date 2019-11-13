@@ -38,7 +38,7 @@ class RequestLogMiddleware implements MiddlewareInterface
         LogHelper::request()
             ->debug('', $this->buildContent());
 
-        return $handler->handle($this->request);
+        return $handler->handle($request);
     }
 
     /**

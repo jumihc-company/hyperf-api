@@ -61,6 +61,6 @@ class CheckSdlMiddleware implements MiddlewareInterface
             }
         }
 
-        return $handler->handle($this->request);
+        return $handler->handle($request);
     }
 }

@@ -22,7 +22,38 @@ class Helper
      */
     public static function ip(RequestInterface $request)
     {
-        return $request->server('REMOTE_ADDR', '0.0.0.0');
+        // 获取客户端ip
+        $ip = $request->server('REMOTE_ADDR');
+        if (static::checkIp($ip)) {
+            return $ip;
+        }
+
+        // 获取真实ip
+        $ip = $request->server('HTTP_X_REAL_IP');
+        if (static::checkIp($ip)) {
+            return $ip;
+        }
+
+        // 获取转发ip
+        $ips = explode(
+            ',',
+            $request->server('HTTP_X_FORWARDED_FOR', '')
+        );
+        if (! empty($ips) && static::checkIp($ips[0])) {
+            return $ips[0];
+        }
+
+        return '0.0.0.0';
+    }
+
+    /**
+     * 检测ip
+     * @param string $ip
+     * @return bool
+     */
+    protected static function checkIp(string $ip)
+    {
+        return ! empty($ip) && ip2long($ip) !== false;
     }
 
     /**

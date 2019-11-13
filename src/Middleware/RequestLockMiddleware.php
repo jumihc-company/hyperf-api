@@ -8,7 +8,6 @@ namespace Jmhc\Restful\Middleware;
 
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\Utils\Context;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Helper;
@@ -57,7 +56,7 @@ class RequestLockMiddleware implements MiddlewareInterface
     {
         // 跨域请求
         if ($this->request->getMethod() === 'OPTIONS') {
-            return $handler->handle($this->request);
+            return $handler->handle($request);
         }
 
         // 请求锁定对象实例
@@ -73,10 +72,7 @@ class RequestLockMiddleware implements MiddlewareInterface
             );
         }
 
-        // 更新请求上下文
-        Context::set(ServerRequestInterface::class, $this->request);
-
-        return $handler->handle($this->request);
+        return $handler->handle($request);
     }
 
     /**

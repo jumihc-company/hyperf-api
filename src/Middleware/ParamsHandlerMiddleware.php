@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Middleware;
 
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Hyperf\Utils\Context;
 use Jmhc\Restful\Utils\Cipher;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -66,9 +65,6 @@ class ParamsHandlerMiddleware implements MiddlewareInterface
             return ! in_array($k, $this->filter);
         }, ARRAY_FILTER_USE_KEY);
 
-        // 更新请求上下文
-        Context::set(ServerRequestInterface::class, $this->request);
-
-        return $handler->handle($this->request);
+        return $handler->handle($request);
     }
 }

@@ -19,37 +19,30 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class CorsMiddleware implements MiddlewareInterface
 {
-
-    /**
-     * @var \Hyperf\HttpServer\Contract\ResponseInterface
-     */
-    protected $response;
-
     /**
      * @var ConfigInterface
      */
     protected $configInterface;
 
     public function __construct(
-        \Hyperf\HttpServer\Contract\ResponseInterface $response,
         ConfigInterface $configInterface
     )
     {
-        $this->response = $response;
         $this->configInterface = $configInterface;
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        foreach ($this->configInterface->get('cors', []) as $k => $v) {
-            $this->response = $this->response->withHeader($k, $v);
+        $response = Context::get(ResponseInterface::class);
+        foreach ($this->configInterface->get('jmhc-api.cors', []) as $k => $v) {
+            $response = $response->withHeader($k, $v);
         }
 
         // 更新响应上下文
-        Context::set(ResponseInterface::class, $this->response);
+        Context::set(ResponseInterface::class, $response);
 
         if ($request->getMethod() == 'OPTIONS') {
-            return $this->response;
+            return $response;
         }
 
         return $handler->handle($request);

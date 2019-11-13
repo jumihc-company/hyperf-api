@@ -63,7 +63,7 @@ class CheckSignatureMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (! $this->configInterface->get('jmhc-api.signature.check')) {
-            return $handler->handle($this->request);
+            return $handler->handle($request);
         }
 
         // 判断时间戳是否超时
@@ -93,7 +93,7 @@ class CheckSignatureMiddleware implements MiddlewareInterface
             $this->error('签名验证失败~');
         }
 
-        return $handler->handle($this->request);
+        return $handler->handle($request);
     }
 
     /**
