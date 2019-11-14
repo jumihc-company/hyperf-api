@@ -7,11 +7,11 @@
 namespace Jmhc\Restful\Contracts;
 
 /**
- * 用户模型
+ * 版本模型
  * @package Jmhc\Restful\Contracts
  */
-interface UserInterface
+interface VersionModelInterface
 {
-    // 通过id获取信息
-    public static function getInfoById(int $id);
+    // 获取最新版本信息
+    public function getLastInfo();
 }

@@ -46,7 +46,7 @@ class Token
     {
         $token = $this->getBearerToken();
         if (empty($token)) {
-            $token = $this->request->header($name, '');
+            $token = $this->request->header(ucwords($name, '-'), '');
         }
         if (empty($token)) {
             $token = $this->request->input($name, '');

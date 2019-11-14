@@ -185,7 +185,7 @@ class ExceptionHandler extends \Hyperf\ExceptionHandler\ExceptionHandler
      */
     protected function refreshToken($request, string $token, array &$headers)
     {
-        $headers['token'] = $token;
+        $headers['Refresh-Token'] = $token;
     }
 
     /**

@@ -7,7 +7,7 @@
 namespace Jmhc\Restful\Middleware;
 
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Jmhc\Restful\Contracts\VersionInterface;
+use Jmhc\Restful\Contracts\VersionModelInterface;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrowTrait;
@@ -30,13 +30,13 @@ class CheckVersionMiddleware implements MiddlewareInterface
     protected $request;
 
     /**
-     * @var VersionInterface
+     * @var VersionModelInterface
      */
     protected $versionModel;
 
     public function __construct(
         RequestInterface $request,
-        VersionInterface $versionModel
+        VersionModelInterface $versionModel
     )
     {
         $this->request = $request;
@@ -74,7 +74,7 @@ class CheckVersionMiddleware implements MiddlewareInterface
      */
     protected function getVersion(string $name)
     {
-        $version = $this->request->header($name, 0);
+        $version = $this->request->header(ucwords($name, '-'), 0);
         if (empty($version)) {
             $version = $this->request->input($name, 0);
         }

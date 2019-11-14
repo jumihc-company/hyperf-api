@@ -20,6 +20,7 @@ abstract class Base
     protected $configInterface;
 
     /**
+     * 配置信息
      * @var array
      */
     protected $config;
@@ -69,9 +70,9 @@ abstract class Base
             []
         );
 
-        $this->method = $this->config['method'] ?? 0;
-        $this->iv = $this->config['iv'] ?? 0;
-        $this->key = $this->config['key'] ?? 0;
+        $this->method = $this->config['method'] ?? '';
+        $this->iv = $this->config['iv'] ?? '';
+        $this->key = $this->config['key'] ?? '';
     }
 
     /**

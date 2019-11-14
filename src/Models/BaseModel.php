@@ -7,7 +7,7 @@
 namespace Jmhc\Restful\Models;
 
 use Hyperf\DbConnection\Model\Model;
-use Jmhc\Restful\Contracts\ConstAttribute;
+use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Scopes\PrimaryKeyDescScope;
 use Jmhc\Restful\Traits\ModelTrait;
 
@@ -16,7 +16,7 @@ use Jmhc\Restful\Traits\ModelTrait;
  * @method ModelTrait initialize()
  * @package Jmhc\Restful\Models
  */
-class BaseModel extends Model implements ConstAttribute
+class BaseModel extends Model implements ConstAttributeInterface
 {
     use ModelTrait;
 

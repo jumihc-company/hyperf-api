@@ -8,20 +8,20 @@ namespace Jmhc\Restful\Models;
 
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Model;
-use Jmhc\Restful\Contracts\UserInterface;
+use Jmhc\Restful\Contracts\UserModelInterface;
 
 /**
  * 用户模型
  * @package Jmhc\Restful\Models
  */
-class UserModel extends BaseModel implements UserInterface
+class UserModel extends BaseModel implements UserModelInterface
 {
     /**
      * 通过id获取信息
      * @param int $id
      * @return Builder|Model|object|null
      */
-    public static function getInfoById(int $id)
+    public function getInfoById(int $id)
     {
         return static::query()
             ->where('id', $id)

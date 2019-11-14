@@ -12,6 +12,7 @@ namespace Jmhc\Restful;
  */
 class PlatformInfo
 {
+    // 所在平台
     const OTHER = 'other';
     const ANDROID = 'android';
     const IOS = 'ios';
@@ -19,6 +20,7 @@ class PlatformInfo
     const ALI_MP = 'ali_mp';
 
     /**
+     * 平台信息 [关键字 => 平台]
      * @var array
      */
     protected static $platforms = [

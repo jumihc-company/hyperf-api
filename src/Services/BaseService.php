@@ -6,7 +6,7 @@
 
 namespace Jmhc\Restful\Services;
 
-use Jmhc\Restful\Contracts\ConstAttribute;
+use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Traits\RequestInfoTrait;
 use Jmhc\Restful\Traits\ResourceServiceTrait;
 use Jmhc\Restful\Traits\ResultThrowTrait;
@@ -16,7 +16,7 @@ use Jmhc\Restful\Traits\UserInfoTrait;
  * 基础服务
  * @package Jmhc\Restful\Services
  */
-class BaseService implements ConstAttribute
+class BaseService implements ConstAttributeInterface
 {
     use ResourceServiceTrait;
     use RequestInfoTrait;

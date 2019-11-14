@@ -36,7 +36,7 @@ class RequestPlatformMiddleware implements MiddlewareInterface
         // 请求平台
         $requestPlatform = $this->getRequestPlatform('request-platform');
 
-        // 所有 user_agent
+        // 所有平台信息
         $allPlatform = PlatformInfo::getAllPlatform();
 
         // 请求平台
@@ -58,7 +58,7 @@ class RequestPlatformMiddleware implements MiddlewareInterface
      */
     protected function getRequestPlatform(string $name)
     {
-        $platform = $this->request->header($name);
+        $platform = $this->request->header(ucwords($name, '-'));
         if (empty($platform)) {
             $platform = $this->request->input($name);
         }

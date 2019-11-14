@@ -10,7 +10,7 @@ use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Model;
 use Hyperf\HttpServer\Contract\RequestInterface;
-use Jmhc\Restful\Contracts\UserInterface;
+use Jmhc\Restful\Contracts\UserModelInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Models\UserModel;
 use Jmhc\Restful\ResultCode;
@@ -47,7 +47,7 @@ class CheckTokenMiddleware implements MiddlewareInterface
     protected $token;
 
     /**
-     * @var UserInterface
+     * @var UserModelInterface
      */
     protected $userModel;
 
@@ -55,7 +55,7 @@ class CheckTokenMiddleware implements MiddlewareInterface
         RequestInterface $request,
         ConfigInterface $configInterface,
         Token $token,
-        UserInterface $userModel
+        UserModelInterface $userModel
     )
     {
         $this->request = $request;
@@ -90,7 +90,7 @@ class CheckTokenMiddleware implements MiddlewareInterface
     protected function check()
     {
         // token
-        $token = $this->token->get('token');
+        $token = $this->token->get();
 
         // 判断token是否存在
         if (empty($token)) {
@@ -119,7 +119,7 @@ class CheckTokenMiddleware implements MiddlewareInterface
         }
 
         // 判断是否刷新token
-        $noticeTime = $this->configInterface->get('jmhc-api.token.notice_refresh_time', 0);
+        $noticeTime = $this->token->getNoticeRefreshTime();
         if ((time() - $time) >= $noticeTime) {
             // 设置刷新的token
             $this->request->refreshToken = $this->token->create($id);
