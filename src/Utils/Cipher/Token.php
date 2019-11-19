@@ -73,8 +73,7 @@ class Token extends Base
      */
     private function encryptStr(string $str)
     {
-        $fill = base64_encode(md5(uniqid()));
-        $fill = substr($fill, 0, $this->len);
+        $fill = $this->fillStr($this->len);
         $en   = openssl_encrypt($str . $fill, $this->method, $this->key, 0, $this->iv);
         $ens  = substr($en, 0, $this->pos) . $fill . substr($en, $this->pos);
         return $ens;
@@ -91,5 +90,15 @@ class Token extends Base
         $de  = openssl_decrypt($str, $this->method, $this->key, 0, $this->iv);
         $des = substr($de, 0, - $this->len);
         return (string) $des;
+    }
+
+    /**
+     * 填充字符串
+     * @param int $len
+     * @return false|string
+     */
+    private function fillStr(int $len)
+    {
+        return substr(base64_encode(bin2hex(random_bytes($len))), 0, $len);
     }
 }

@@ -48,7 +48,7 @@ JMHC_TOKEN_NOTICE_REFRESH_TIME=172800
 
 ```apacheconfig
 # 是否检测签名
-JMHC_CHECK_SIGNATURE=false
+JMHC_SIGNATURE_CHECK=false
 # 签名秘钥
 JMHC_SIGNATURE_KEY=
 # 签名时间戳超时（秒）
