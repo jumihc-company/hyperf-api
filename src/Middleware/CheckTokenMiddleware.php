@@ -9,7 +9,9 @@ namespace Jmhc\Restful\Middleware;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Model\Builder;
 use Hyperf\Database\Model\Model;
+use Hyperf\Di\Annotation\AnnotationCollector;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Jmhc\Restful\Annotation\IgnoreCheckToken;
 use Jmhc\Restful\Contracts\UserModelInterface;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\Models\UserModel;
@@ -17,6 +19,7 @@ use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
 use Jmhc\Restful\Traits\ResultThrowTrait;
 use Jmhc\Restful\Utils\Collection;
+use Jmhc\Restful\Utils\Dispatch;
 use Jmhc\Restful\Utils\Token;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -51,17 +54,32 @@ class CheckTokenMiddleware implements MiddlewareInterface
      */
     protected $userModel;
 
+    /**
+     * 调度类
+     * @var string
+     */
+    protected $dispatchClass;
+
+    /**
+     * 调度方法
+     * @var string
+     */
+    protected $dispatchMethod;
+
     public function __construct(
         RequestInterface $request,
         ConfigInterface $configInterface,
         Token $token,
-        UserModelInterface $userModel
+        UserModelInterface $userModel,
+        Dispatch $dispatch
     )
     {
         $this->request = $request;
         $this->configInterface = $configInterface;
         $this->token = $token;
         $this->userModel = $userModel;
+        $this->dispatchClass = $dispatch->getClass();
+        $this->dispatchMethod = $dispatch->getMethod();
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -70,8 +88,13 @@ class CheckTokenMiddleware implements MiddlewareInterface
             // 用户信息
             $this->request->userInfo = $this->check();
         } catch (ResultException $e) {
-            // 强制登录 TODO: 中间件参数
-            if (true) {
+            // 类忽略检查令牌
+            $ignoreClass = ! empty(AnnotationCollector::getClassAnnotation($this->dispatchClass, IgnoreCheckToken::class));
+            // 方法忽略检查令牌
+            $ignoreMethod = ! empty(AnnotationCollector::getClassMethodAnnotation($this->dispatchClass, $this->dispatchMethod)[IgnoreCheckToken::class]);
+
+            // 强制登录
+            if (! ($ignoreClass || $ignoreMethod)) {
                 throw $e;
             }
 

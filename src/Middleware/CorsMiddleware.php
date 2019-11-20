@@ -20,6 +20,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 class CorsMiddleware implements MiddlewareInterface
 {
     /**
+     * 跨域响应状态码
+     * @var int
+     */
+    protected $statusCode = 204;
+
+    /**
      * @var ConfigInterface
      */
     protected $configInterface;
@@ -42,7 +48,7 @@ class CorsMiddleware implements MiddlewareInterface
         Context::set(ResponseInterface::class, $response);
 
         if ($request->getMethod() == 'OPTIONS') {
-            return $response;
+            return $response->withStatus($this->statusCode);
         }
 
         return $handler->handle($request);
