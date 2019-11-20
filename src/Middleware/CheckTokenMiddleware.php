@@ -54,32 +54,17 @@ class CheckTokenMiddleware implements MiddlewareInterface
      */
     protected $userModel;
 
-    /**
-     * 调度类
-     * @var string
-     */
-    protected $dispatchClass;
-
-    /**
-     * 调度方法
-     * @var string
-     */
-    protected $dispatchMethod;
-
     public function __construct(
         RequestInterface $request,
         ConfigInterface $configInterface,
         Token $token,
-        UserModelInterface $userModel,
-        Dispatch $dispatch
+        UserModelInterface $userModel
     )
     {
         $this->request = $request;
         $this->configInterface = $configInterface;
         $this->token = $token;
         $this->userModel = $userModel;
-        $this->dispatchClass = $dispatch->getClass();
-        $this->dispatchMethod = $dispatch->getMethod();
     }
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
@@ -88,10 +73,15 @@ class CheckTokenMiddleware implements MiddlewareInterface
             // 用户信息
             $this->request->userInfo = $this->check();
         } catch (ResultException $e) {
+            /** @var Dispatch $dispatch 调度辅助 */
+            $dispatch = make(Dispatch::class, [
+                'request' => $request,
+            ]);
+
             // 类忽略检查令牌
-            $ignoreClass = ! empty(AnnotationCollector::getClassAnnotation($this->dispatchClass, IgnoreCheckToken::class));
+            $ignoreClass = ! empty(AnnotationCollector::getClassAnnotation($dispatch->getClass(), IgnoreCheckToken::class));
             // 方法忽略检查令牌
-            $ignoreMethod = ! empty(AnnotationCollector::getClassMethodAnnotation($this->dispatchClass, $this->dispatchMethod)[IgnoreCheckToken::class]);
+            $ignoreMethod = ! empty(AnnotationCollector::getClassMethodAnnotation($dispatch->getClass(), $dispatch->getMethod())[IgnoreCheckToken::class]);
 
             // 强制登录
             if (! ($ignoreClass || $ignoreMethod)) {
