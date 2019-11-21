@@ -37,10 +37,22 @@ class ConfigProvider
             ],
             'publish' => [
                 [
-                    'id' => 'config',
-                    'description' => 'description of this config file.',
+                    'id' => 'config-jmhc-api',
+                    'description' => 'API profile.',
                     'source' => jmhc_api_config_path('jmhc-api.php'),
                     'destination' => BASE_PATH . '/config/autoload/jmhc-api.php',
+                ],
+                [
+                    'id' => 'database-users',
+                    'description' => 'User table migration file.',
+                    'source' => jmhc_api_database_path('migrations/2019_11_21_151645_create_users_table.php'),
+                    'destination' => BASE_PATH . '/migrations/2019_11_21_151645_create_users_table.php',
+                ],
+                [
+                    'id' => 'database-version',
+                    'description' => 'Version table migration file.',
+                    'source' => jmhc_api_database_path('migrations/2019_11_21_151651_create_versions_table.php'),
+                    'destination' => BASE_PATH . '/migrations/2019_11_21_151651_create_versions_table.php',
                 ],
             ],
             'jmhc-api' => file_get_contents(jmhc_api_config_path('jmhc-api.php')),
