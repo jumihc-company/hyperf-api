@@ -8,7 +8,7 @@ return [
     // 异常文件名称
     'db_exception_file_name' => env('JMHC_DB_EXCEPTION_FILE_NAME', 'handle_db.exception'),
     'exception_file_name' => env('JMHC_EXCEPTION_FILE_NAME', 'handle.exception'),
-    'error_file_name' => env('JMHC_ERROR_FILE_NAME', 'handle.exception'),
+    'error_file_name' => env('JMHC_ERROR_FILE_NAME', 'handle.error'),
 
     // 单设备登录临时缓存过期时间（秒）
     'sdl_tmp_expire' => env('JMHC_SDL_TMP_EXPIRE', 10),

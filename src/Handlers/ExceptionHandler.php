@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Handlers;
 
+use Error;
 use ErrorException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Exception\QueryException;
@@ -18,7 +19,6 @@ use Jmhc\Restful\Utils\LogHelper;
 use Jmhc\Restful\Utils\RedisLock;
 use Jmhc\Restful\Utils\Token;
 use LogicException;
-use ParseError;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionException;
 use RuntimeException;
@@ -152,7 +152,7 @@ class ExceptionHandler extends \Hyperf\ExceptionHandler\ExceptionHandler
                 $this->configInterface->get('jmhc-api.exception_file_name', 'handle.exception'),
                 $e
             );
-        } elseif ($e instanceof ParseError || $e instanceof ErrorException) {
+        } elseif ($e instanceof Error || $e instanceof ErrorException) {
             // 发生错误
             $this->code = ResultCode::SYS_ERROR;
             $this->msg = ResultMsg::SYS_ERROR;
