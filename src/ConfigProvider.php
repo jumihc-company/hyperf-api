@@ -6,6 +6,12 @@
 
 namespace Jmhc\Restful;
 
+use Jmhc\Restful\Console\Commands\MakeCommonModelCommand;
+use Jmhc\Restful\Console\Commands\MakeControllerCommand;
+use Jmhc\Restful\Console\Commands\MakeFactoryCommand;
+use Jmhc\Restful\Console\Commands\MakeModelCommand;
+use Jmhc\Restful\Console\Commands\MakeServiceCommand;
+use Jmhc\Restful\Console\Commands\MakeWithFileCommand;
 use Jmhc\Restful\Contracts\UserModelInterface;
 use Jmhc\Restful\Contracts\VersionModelInterface;
 use Jmhc\Restful\Middleware\CoreMiddleware;
@@ -35,12 +41,26 @@ class ConfigProvider
                     ],
                 ],
             ],
+            'commands' => [
+                MakeCommonModelCommand::class,
+                MakeControllerCommand::class,
+                MakeModelCommand::class,
+                MakeServiceCommand::class,
+                MakeFactoryCommand::class,
+                MakeWithFileCommand::class,
+            ],
             'publish' => [
                 [
                     'id' => 'config-jmhc-api',
                     'description' => 'API profile.',
                     'source' => jmhc_api_config_path('jmhc-api.php'),
                     'destination' => BASE_PATH . '/config/autoload/jmhc-api.php',
+                ],
+                [
+                    'id' => 'config-jmhc-build-file',
+                    'description' => 'Build file.',
+                    'source' => jmhc_api_config_path('jmhc-build-file.php'),
+                    'destination' => BASE_PATH . '/config/autoload/jmhc-build-file.php',
                 ],
                 [
                     'id' => 'database-users',
@@ -56,6 +76,7 @@ class ConfigProvider
                 ],
             ],
             'jmhc-api' => file_get_contents(jmhc_api_config_path('jmhc-api.php')),
+            'jmhc-build-file' => file_get_contents(jmhc_api_config_path('jmhc-build-file.php')),
         ];
     }
 }
