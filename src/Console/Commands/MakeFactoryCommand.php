@@ -90,12 +90,12 @@ class MakeFactoryCommand extends AbstractMakeCommand
         $scans = [];
         foreach ($this->optionScanDir as $dir) {
             foreach (glob($dir . '*.php') as $file) {
-                if (strpos($file, BASE_PATH) !== 0) {
+                if (strpos($file, app_path()) !== 0) {
                     continue;
                 }
 
                 $_class = rtrim(basename($file), '\.php');
-                $_file = str_replace([BASE_PATH, sprintf('/%s.php', $_class)], '', $file);
+                $_file = str_replace([app_path(), sprintf('/%s.php', $_class)], '', $file);
                 $scans[] = [
                     'namespace' => sprintf(
                         '\\App%s\\%s',
@@ -193,7 +193,7 @@ EOF;
             $this->entityName
         );
         $this->optionScanDir = array_map(function ($v) {
-            return BASE_PATH . '/' . $this->filterOptionDir($v);
+            return app_path($this->filterOptionDir($v));
         }, $this->option('scan-dir'));
         $this->optionDir = $this->filterOptionDir($this->option('dir'));
         $this->optionForce = $this->option('force');

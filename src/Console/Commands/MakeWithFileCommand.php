@@ -147,7 +147,7 @@ class MakeWithFileCommand extends Command
     protected function filterTables(array $tables)
     {
         // 数据表前缀
-        $prefix = $this->configInterface->get('database.default.prefix', '');
+        $prefix = $this->configInterface->get('databases.default.prefix', '');
 
         return array_values(array_filter(array_unique(array_map(function ($table) use ($prefix) {
             return str_replace($prefix, '', $table);

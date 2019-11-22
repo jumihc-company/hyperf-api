@@ -97,9 +97,9 @@ class MakeCommonModelCommand extends AbstractMakeCommand
         $configInterface = ApplicationContext::getContainer()->get(ConfigInterface::class);
 
         // 配置数据表
-        $this->configDatabase = $configInterface->get('database.default.database');
+        $this->configDatabase = $configInterface->get('databases.default.database');
         // 配置数据表前缀
-        $this->configPrefix = $configInterface->get('database.default.prefix');
+        $this->configPrefix = $configInterface->get('databases.default.prefix');
 
         parent::__construct($name);
     }

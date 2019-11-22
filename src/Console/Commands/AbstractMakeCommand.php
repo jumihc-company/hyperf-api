@@ -53,7 +53,7 @@ abstract class AbstractMakeCommand extends Command
         // 获取保存文件夹
         $dir = $this->getSaveDir();
         // 保存文件夹
-        $this->dir = BASE_PATH . '/' . $dir;
+        $this->dir = app_path($dir);
         // 命名空间
         $this->namespace = $this->getNamespace($dir);
 

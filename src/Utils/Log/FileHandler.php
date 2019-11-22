@@ -98,7 +98,7 @@ class FileHandler
      */
     protected function setSavePath()
     {
-        $this->savePath = BASE_PATH . '/' . (trim($this->path, '/') . '/');
+        $this->savePath = base_path(trim($this->path, '/') . '/');
     }
 
     /**
