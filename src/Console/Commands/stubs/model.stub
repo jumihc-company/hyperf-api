@@ -1,0 +1,26 @@
+<?php
+namespace %NAMESPACE%;
+%USES%
+%ANNOTATIONS%
+class %CLASS%%EXTENDS%
+{
+    /**
+     * @var string
+     */
+    protected $table = %TABLE%;
+
+    /**
+     * @var array
+     */
+    protected $fillable = %FILLABLE%;
+
+    /**
+     * @var array
+     */
+    protected $dates = %DATES%;
+
+    /**
+     * @var array
+     */
+    protected $casts = %CASTS%;
+}

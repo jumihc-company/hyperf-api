@@ -1,0 +1,7 @@
+<?php
+namespace %NAMESPACE%;
+
+use Jmhc\Restful\Factory\BaseFactory;
+%ANNOTATIONS%
+class %CLASS% extends BaseFactory
+{}

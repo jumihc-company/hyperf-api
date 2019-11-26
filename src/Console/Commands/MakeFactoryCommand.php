@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful\Console\Commands;
 
-use Hyperf\Utils\Str;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -14,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
  * 生成工厂
  * @package Jmhc\Restful\Console\Commands
  */
-class MakeFactoryCommand extends AbstractMakeCommand
+class MakeFactoryCommand extends MakeCommand
 {
     /**
      * 命令名称
@@ -41,6 +40,18 @@ class MakeFactoryCommand extends AbstractMakeCommand
     protected $entityName = 'Factory';
 
     /**
+     * 模板路径
+     * @var string
+     */
+    protected $stubPath = __DIR__ . '/stubs/factory.stub';
+
+    /**
+     * 注释
+     * @var string
+     */
+    protected $annotation;
+
+    /**
      * 参数 name
      * @var string
      */
@@ -53,49 +64,56 @@ class MakeFactoryCommand extends AbstractMakeCommand
     protected $optionScanDir;
 
     /**
-     * 选项 dir
-     * @var string
+     * 构建操作
      */
-    protected $optionDir;
-
-    /**
-     * 选项 force
-     * @var bool
-     */
-    protected $optionForce;
-
-    /**
-     * 选项 suffix
-     * @var bool
-     */
-    protected $optionSuffix;
-
-    /**
-     * 主要操作
-     */
-    protected function mainHandle()
+    protected function buildHandle()
     {
-        // 生成名称
-        $name = $this->getBuildName($this->argumentName);
+        // 注解内容
+        $this->annotation = $this->getAnnotation($this->getScans());
+        file_put_contents($this->saveFilePath, $this->getBuildContent());
+        $this->info($this->saveFilePath . ' create Succeed!');
+    }
 
-        // 保存文件
-        $filePath = $this->dir . $name . '.php';
+    /**
+     * 执行额外命令
+     */
+    protected function extraCommands()
+    {}
 
-        // 存在且不覆盖
-        if (file_exists($filePath) && ! $this->optionForce) {
-            return false;
-        }
+    /**
+     * 获取生成内容
+     * @return string
+     */
+    protected function getBuildContent()
+    {
+        $content = file_get_contents($this->stubPath);
 
-        // 扫描的文件
+        // 替换
+        $this->replaceNamespace($content, $this->namespace)
+            ->replaceClass($content, $this->class)
+            ->replaceAnnotations($content, $this->annotation);
+
+        return $content;
+    }
+
+    /**
+     * 获取扫描结果
+     * @return array
+     */
+    protected function getScans()
+    {
+        // app 目录
+        $appPath = app_path();
+
         $scans = [];
         foreach ($this->optionScanDir as $dir) {
             foreach (glob($dir . '*.php') as $file) {
-                if (strpos($file, app_path()) !== 0) {
+                if (strpos($file, $appPath) !== 0) {
                     continue;
                 }
 
                 $_class = rtrim(basename($file), '\.php');
-                $_file = str_replace([app_path(), sprintf('/%s.php', $_class)], '', $file);
+                $_file = str_replace([$appPath, sprintf('/%s.php', $_class)], '', $file);
                 $scans[] = [
                     'namespace' => sprintf(
                         '\\App%s\\%s',
@@ -107,48 +125,7 @@ class MakeFactoryCommand extends AbstractMakeCommand
             }
         }
 
-        // 生成文件
-        $annotation = $this->getAnnotation($scans);
-        $content = $this->getBuildContent($name, $annotation);
-        file_put_contents($filePath, $content);
-        $this->info($filePath . ' create Succeed!');
-
-        return true;
-    }
-
-    /**
-     * 获取生成名称
-     * @param string $name
-     * @return string
-     */
-    protected function getBuildName(string $name)
-    {
-        $name = Str::singular($this->filterStr($name));
-        // 判断是否添加后缀
-        if (! preg_match(sprintf('/%s$/i', $this->entityName), $name) && $this->optionSuffix) {
-            $name .= '_' . $this->entityName;
-        }
-        return Str::studly($name);
-    }
-
-    /**
-     * 获取生成内容
-     * @param string $name
-     * @param string $annotation
-     * @return string
-     */
-    protected function getBuildContent(string $name, string $annotation)
-    {
-        $str = <<< EOF
-<?php
-namespace %s;
-
-use Jmhc\Restful\Factory\BaseFactory;
-%s
-class %s extends BaseFactory
-{}
-EOF;
-        return sprintf($str, $this->namespace, $annotation, $name);
+        return $scans;
     }
 
     /**
@@ -201,27 +178,15 @@ EOF;
     }
 
     /**
-     * 获取参数
-     * @return array
+     * 命令配置
      */
-    protected function getArguments()
+    protected function configure()
     {
-        return [
-            ['name', InputArgument::REQUIRED, $this->entityName . ' name'],
-        ];
-    }
+        $this->addArgument('name', InputArgument::REQUIRED, $this->entityName . ' name');
 
-    /**
-     * 获取选项
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['scan-dir', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'File scanning path, relative to app directory'],
-            ['dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir],
-            ['force', 'f', InputOption::VALUE_NONE, 'Overwrite existing files'],
-            ['suffix', 's', InputOption::VALUE_NONE, sprintf('Add the `%s` suffix', $this->entityName)],
-        ];
+        $this->addOption('scan-dir', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'File scanning path, relative to app directory');
+        $this->addOption('dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir);
+        $this->addOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite existing files');
+        $this->addOption('suffix', 's', InputOption::VALUE_NONE, sprintf('Add the `%s` suffix', $this->entityName));
     }
 }

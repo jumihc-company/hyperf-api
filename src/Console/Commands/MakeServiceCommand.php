@@ -27,35 +27,19 @@ class MakeServiceCommand extends MakeCommand
     protected $entityName = 'Service';
 
     /**
-     * 获取生成内容
-     * @param string $name
-     * @return string
+     * 模板路径
+     * @var string
      */
-    protected function getBuildContent(string $name)
-    {
-        $str = <<< EOF
-<?php
-namespace %s;
-
-use Jmhc\Restful\Services\BaseService;
-
-class %s extends BaseService
-{}
-EOF;
-        return sprintf($str, $this->namespace, $name);
-    }
+    protected $stubPath = __DIR__ . '/stubs/service.stub';
 
     /**
-     * 获取选项
-     * @return array
+     * 命令配置
      */
-    protected function getOptions()
+    protected function configure()
     {
-        $options = parent::getOptions();
+        parent::configure();
 
-        return array_merge($options, [
-            ['controller', null, InputOption::VALUE_NONE, 'Generate the controller file with the same name'],
-            ['model', null, InputOption::VALUE_NONE, 'Generate the model file with the same name'],
-        ]);
+        $this->addOption('controller', null, InputOption::VALUE_NONE, 'Generate the controller file with the same name');
+        $this->addOption('model', null, InputOption::VALUE_NONE, 'Generate the model file with the same name');
     }
 }

@@ -6,7 +6,6 @@
 
 namespace Jmhc\Restful;
 
-use Jmhc\Restful\Console\Commands\MakeCommonModelCommand;
 use Jmhc\Restful\Console\Commands\MakeControllerCommand;
 use Jmhc\Restful\Console\Commands\MakeFactoryCommand;
 use Jmhc\Restful\Console\Commands\MakeModelCommand;
@@ -42,7 +41,6 @@ class ConfigProvider
                 ],
             ],
             'commands' => [
-                MakeCommonModelCommand::class,
                 MakeControllerCommand::class,
                 MakeModelCommand::class,
                 MakeServiceCommand::class,

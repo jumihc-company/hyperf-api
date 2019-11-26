@@ -10,6 +10,7 @@ use Hyperf\Command\Command;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\Utils\Str;
+use Jmhc\Restful\Console\Commands\Traits\CommandTrait;
 use Jmhc\Restful\Console\Commands\Traits\MakeTrait;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -19,6 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class MakeWithFileCommand extends Command
 {
+    use CommandTrait;
     use MakeTrait;
 
     /**
@@ -105,6 +107,12 @@ class MakeWithFileCommand extends Command
      */
     protected $optionMigration;
 
+    /**
+     * 选项 model_extends_pivot
+     * @var bool
+     */
+    protected $optionModelExtendsPivot;
+
     public function __construct(string $name = null)
     {
         $this->setDescription($this->description);
@@ -165,6 +173,7 @@ class MakeWithFileCommand extends Command
             'name' => $name,
             '--module' => $this->optionModule,
             '--suffix' => $this->optionSuffix,
+            '--model-extends-pivot' => $this->optionModelExtendsPivot,
         ];
 
         // 创建控制器
@@ -214,26 +223,25 @@ class MakeWithFileCommand extends Command
         $this->optionModel = $this->option('model');
         $this->isForceModel = $this->option('force') || $this->option('force-model');
         $this->optionMigration = $this->option('migration');
+        $this->optionModelExtendsPivot = $this->option('model-extends-pivot');
     }
 
     /**
-     * 获取选项
-     * @return array
+     * 命令配置
      */
-    public function getOptions()
+    protected function configure()
     {
-        return [
-            ['dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir],
-            ['module', 'm', InputOption::VALUE_REQUIRED, 'Module name'],
-            ['force', 'f', InputOption::VALUE_NONE, 'Overwrite existing file'],
-            ['force-controller', null, InputOption::VALUE_NONE, 'Overwrite existing controller file'],
-            ['force-service', null, InputOption::VALUE_NONE, 'Overwrite existing service file'],
-            ['force-model', null, InputOption::VALUE_NONE, 'Overwrite existing model file'],
-            ['suffix', 's', InputOption::VALUE_NONE, sprintf('Add suffix')],
-            ['controller', null, InputOption::VALUE_NONE, 'Generate the controller file with the same name'],
-            ['service', null, InputOption::VALUE_NONE, 'Generate the service file with the same name'],
-            ['model', null, InputOption::VALUE_NONE, 'Generate the model file with the same name'],
-            ['migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name'],
-        ];
+        $this->addOption('dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir);
+        $this->addOption('module', 'm', InputOption::VALUE_REQUIRED, 'Module name');
+        $this->addOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite existing file');
+        $this->addOption('force-controller', null, InputOption::VALUE_NONE, 'Overwrite existing controller file');
+        $this->addOption('force-service', null, InputOption::VALUE_NONE, 'Overwrite existing service file');
+        $this->addOption('force-model', null, InputOption::VALUE_NONE, 'Overwrite existing model file');
+        $this->addOption('suffix', 's', InputOption::VALUE_NONE, sprintf('Add suffix'));
+        $this->addOption('controller', null, InputOption::VALUE_NONE, 'Generate the controller file with the same name');
+        $this->addOption('service', null, InputOption::VALUE_NONE, 'Generate the service file with the same name');
+        $this->addOption('model', null, InputOption::VALUE_NONE, 'Generate the model file with the same name');
+        $this->addOption('migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name');
+        $this->addOption('model-extends-pivot', null, InputOption::VALUE_NONE, 'The model extends Jmhc\Restful\Models\BasePivot');
     }
 }
