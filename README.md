@@ -28,7 +28,7 @@
 	- [trait介绍](#trait%E4%BB%8B%E7%BB%8D)
 		- [ModelTrait.php](#modeltraitphp)
 		- [RequestInfoTrait.php](#requestinfotraitphp)
-	    - [ResultThrowTrait.php](#resultthrowtraitphp)
+		- [ResultThrowTrait.php](#resultthrowtraitphp)
 		- [UserInfoTrait.php](#userinfotraitphp)
 	- [工具类介绍](#%E5%B7%A5%E5%85%B7%E7%B1%BB%E4%BB%8B%E7%BB%8D)
 	    - [Collection.php](#collectionphp)
@@ -36,7 +36,6 @@
 	    - [Dispatch.php](#dispatchphp)
 	    - [FileSize.php](#filesizephp)
 	    - [Log.php](#logphp)
-	    - [RequestClient.php](#requestclientphp)
 	    - [Sdl.php](#sdlphp)
 	    - [SmsCache.php](#smscachephp)
 	    - [Token.php](#tokenphp)
@@ -324,7 +323,7 @@ make(DbHelper::class)->getAllTables();
 // 返回 mysql 链接下 users 表字段数据
 make(DbHelper::class, [
     'name' => 'mysql'
-])->getAllTables();
+])->getAllColumns('users');
 ```
 
 #### Dispatch.php
@@ -365,17 +364,6 @@ FileSize::get('2g');
 > 文件日志保存
 
 - `debug` 日志受环境变量 `LOG_DEBUG` 控制
-
-#### RequestClient.php
-
-> `Jmhc\Restful\Utils\RequestClient`
->
-> 请求客户端，基于 `GuzzleHttp\Client`
-
-复写构造函数：
-
-- 设置不验证 `https`
-- 设置 `user-agent` 为谷歌浏览器
 
 #### Sdl.php
 
