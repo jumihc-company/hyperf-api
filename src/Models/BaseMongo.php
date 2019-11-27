@@ -25,13 +25,14 @@ class BaseMongo extends Model implements ConstAttributeInterface
      */
     protected static $unguarded = true;
 
+    /**
+     * 链接名称
+     * @var string
+     */
+    protected $connection = 'mongodb';
+
     protected function initializeBefore()
     {
-        // 设置链接名称
-        if (empty($this->connection)) {
-            $this->setConnection('mongodb');
-        }
-
         // 设置表名称
         if (empty($this->table)) {
             $this->setTable(static::getSnakePluralName());
