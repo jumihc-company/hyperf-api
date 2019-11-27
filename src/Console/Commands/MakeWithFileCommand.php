@@ -113,6 +113,12 @@ class MakeWithFileCommand extends Command
      */
     protected $optionModelExtendsPivot;
 
+    /**
+     * 选项 model_extends_mongo
+     * @var bool
+     */
+    protected $optionModelExtendsMongo;
+
     public function __construct(string $name = null)
     {
         $this->setDescription($this->description);
@@ -174,6 +180,7 @@ class MakeWithFileCommand extends Command
             '--module' => $this->optionModule,
             '--suffix' => $this->optionSuffix,
             '--model-extends-pivot' => $this->optionModelExtendsPivot,
+            '--model-extends-mongo' => $this->optionModelExtendsMongo,
         ];
 
         // 创建控制器
@@ -224,6 +231,7 @@ class MakeWithFileCommand extends Command
         $this->isForceModel = $this->option('force') || $this->option('force-model');
         $this->optionMigration = $this->option('migration');
         $this->optionModelExtendsPivot = $this->option('model-extends-pivot');
+        $this->optionModelExtendsMongo = $this->option('model-extends-mongo');
     }
 
     /**
@@ -243,5 +251,6 @@ class MakeWithFileCommand extends Command
         $this->addOption('model', null, InputOption::VALUE_NONE, 'Generate the model file with the same name');
         $this->addOption('migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name');
         $this->addOption('model-extends-pivot', null, InputOption::VALUE_NONE, 'The model extends Jmhc\Restful\Models\BasePivot');
+        $this->addOption('model-extends-mongo', null, InputOption::VALUE_NONE, 'The model extends Jmhc\Restful\Models\BaseMongo');
     }
 }

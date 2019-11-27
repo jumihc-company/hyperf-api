@@ -2,6 +2,7 @@
     "name": "jmhc/hyperf-api",
     "description": "Hyperf restful api.",
     "keywords": [
+        "jmhc",
         "restful",
         "api",
         "hyperf"
@@ -36,7 +37,8 @@
         "hyperf/redis": "~1.1.0",
         "hyperf/db-connection": "~1.1.0",
         "hyperf/validation": "~1.1.0",
-        "doctrine/dbal": "^2.10"
+        "doctrine/dbal": "^2.10",
+        "jmhc/mongodb": "dev-master"
     },
     "extra": {
         "hyperf": {

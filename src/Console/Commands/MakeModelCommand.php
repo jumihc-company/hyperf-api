@@ -299,6 +299,10 @@ class MakeModelCommand extends MakeCommand
             // 继承中间模型
             $this->uses = PHP_EOL . 'use Jmhc\Restful\Models\BasePivot;';
             $this->extends = ' extends BasePivot';
+        } elseif ($this->optionModelExtendsMongo) {
+            // 继承 mongo 模型
+            $this->uses = PHP_EOL . 'use Jmhc\Restful\Models\BaseMongo;';
+            $this->extends = ' extends BaseMongo';
         }
     }
 

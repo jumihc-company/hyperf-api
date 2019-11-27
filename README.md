@@ -12,6 +12,7 @@
 	- [模型](#%E6%A8%A1%E5%9E%8B-1)
 	    - [普通模型](#%E6%99%AE%E9%80%9A%E6%A8%A1%E5%9E%8B)
 	    - [中间表模型](#%E4%B8%AD%E9%97%B4%E8%A1%A8%E6%A8%A1%E5%9E%8B)
+	    - [mongodb模型](#mongodb%E6%A8%A1%E5%9E%8B)
 	- [服务层(逻辑层)](#%E6%9C%8D%E5%8A%A1%E5%B1%82%E9%80%BB%E8%BE%91%E5%B1%82-1)
 	- [命令行](#%E5%91%BD%E4%BB%A4%E8%A1%8C)
 	    - [创建控制器](#%E5%88%9B%E5%BB%BA%E6%8E%A7%E5%88%B6%E5%99%A8)
@@ -105,6 +106,14 @@ php bin/hyperf.php vendor:publish jmhc/hyperf-api
 #### 中间表模型
 
 > 需继承 `Jmhc\Restful\Models\BasePivot`
+
+- 可使用 `Jmhc\Restful\Traits\ModelTrait` 里的方法
+
+#### mongodb模型
+
+> 需继承 `Jmhc\Restful\Models\BaseMongo`
+> 
+> 使用前需配置，参考 [配置](https://github.com/jumihc-company/mongodb#%E9%85%8D%E7%BD%AE)
 
 - 可使用 `Jmhc\Restful\Traits\ModelTrait` 里的方法
 
