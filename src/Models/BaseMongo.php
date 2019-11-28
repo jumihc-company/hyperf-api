@@ -25,12 +25,6 @@ class BaseMongo extends Model implements ConstAttributeInterface
      */
     protected static $unguarded = true;
 
-    /**
-     * 链接名称
-     * @var string
-     */
-    protected $connection = 'mongodb';
-
     protected function initializeBefore()
     {
         // 设置表名称

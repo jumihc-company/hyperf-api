@@ -66,3 +66,18 @@ JMHC_REQUEST_LOCK_TIPS=请求已被锁定，请稍后重试~
 # 单设备登录临时缓存过期时间（秒）
 JMHC_SDL_TMP_EXPIRE=10
 ```
+
+```apacheconfig
+# mongodb链接地址
+MONGODB_HOST=mongo
+# mongodb链接端口
+MONGODB_PORT=27017
+# mongodb数据库名称
+MONGODB_DATABASE=mongo
+# mongodb用户名
+MONGODB_USERNAME=
+# mongodb密码
+MONGODB_PASSWORD=
+# mongodb授权数据库名称
+MONGODB_AUTH_DATABASE=admin
+```
