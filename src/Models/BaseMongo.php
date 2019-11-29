@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Models;
 
+use Hyperf\Utils\ApplicationContext;
 use Jmhc\Mongodb\Eloquent\Model;
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Scopes\PrimaryKeyDescScope;
@@ -38,7 +39,9 @@ class BaseMongo extends Model implements ConstAttributeInterface
     {
         parent::boot();
 
-        static::addGlobalScope(new PrimaryKeyDescScope());
+        static::addGlobalScope(
+            ApplicationContext::getContainer()->get(PrimaryKeyDescScope::class)
+        );
     }
 
     public function getForeignKey()

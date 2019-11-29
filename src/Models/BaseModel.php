@@ -7,6 +7,7 @@
 namespace Jmhc\Restful\Models;
 
 use Hyperf\DbConnection\Model\Model;
+use Hyperf\Utils\ApplicationContext;
 use Jmhc\Restful\Contracts\ConstAttributeInterface;
 use Jmhc\Restful\Scopes\PrimaryKeyDescScope;
 use Jmhc\Restful\Traits\ModelTrait;
@@ -32,7 +33,9 @@ class BaseModel extends Model implements ConstAttributeInterface
     {
         parent::boot();
 
-        static::addGlobalScope(new PrimaryKeyDescScope());
+        static::addGlobalScope(
+            ApplicationContext::getContainer()->get(PrimaryKeyDescScope::class)
+        );
     }
 
     public function getForeignKey()

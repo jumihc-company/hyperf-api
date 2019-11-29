@@ -16,6 +16,7 @@ use Jmhc\Restful\Contracts\VersionModelInterface;
 use Jmhc\Restful\Middleware\CoreMiddleware;
 use Jmhc\Restful\Models\UserModel;
 use Jmhc\Restful\Models\VersionModel;
+use Jmhc\Restful\Scopes\PrimaryKeyDescScope;
 use Jmhc\Restful\Utils\Log;
 
 /**
@@ -30,6 +31,7 @@ class ConfigProvider
             'dependencies' => [
                 \Hyperf\HttpServer\CoreMiddleware::class => CoreMiddleware::class,
                 Log::class => Log::class,
+                PrimaryKeyDescScope::class => PrimaryKeyDescScope::class,
                 UserModelInterface::class => UserModel::class,
                 VersionModelInterface::class => VersionModel::class,
             ],
