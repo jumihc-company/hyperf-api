@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Utils;
 
+use Hyperf\Utils\ApplicationContext;
 use Hyperf\Utils\Arr;
 use Psr\Http\Message\RequestInterface;
 
@@ -15,6 +16,24 @@ use Psr\Http\Message\RequestInterface;
  */
 class Helper
 {
+    /**
+     * 单例辅助
+     * @param string $class
+     * @param bool $refresh
+     * @param array $params
+     * @return mixed|null
+     */
+    public static function instance(string $class, bool $refresh = false, array $params = [])
+    {
+        $container = ApplicationContext::getContainer()->get(Container::class);
+        $id = static::array2key($params, $class);
+        if (! $container->has($id) || $refresh) {
+            $container->instance($id, make($class, $params));
+        }
+
+        return $container->get($id);
+    }
+
     /**
      * 获取ip地址
      * @param RequestInterface $request

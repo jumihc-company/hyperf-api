@@ -27,6 +27,7 @@
 	- [模型作用域](#%E6%A8%A1%E5%9E%8B%E4%BD%9C%E7%94%A8%E5%9F%9F)
 	    - [主键字段倒序](#%E4%B8%BB%E9%94%AE%E5%AD%97%E6%AE%B5%E5%80%92%E5%BA%8F)
 	- [trait介绍](#trait%E4%BB%8B%E7%BB%8D)
+	    - [InstanceTrait.php](#instancetraitphp)
 		- [ModelTrait.php](#modeltraitphp)
 		- [RequestInfoTrait.php](#requestinfotraitphp)
 		- [ResultThrowTrait.php](#resultthrowtraitphp)
@@ -269,6 +270,22 @@ php artisan jmhc-api:make-factory service --scan-dir Http/Services --dir Commons
 `Jmhc\Restful\Models\BaseModel` 已默认注册此全局作用域
 
 ### trait介绍
+
+#### InstanceTrait.php
+
+> `Jmhc\Restful\Traits\InstanceTrait`
+>
+> 单例类 trait
+
+```php
+// 无构造参数使用
+T::getInstance()->a();
+
+// 有构造参数使用，c为构造参数名称
+T::getInstance([
+    'c' => ['a']
+])->a();
+```
 
 #### ModelTrait.php
 
