@@ -52,6 +52,10 @@ composer require jmhc/hyperf-api
 ```php
 // 发布所有文件
 php bin/hyperf.php vendor:publish jmhc/hyperf-api
+// 发布 Translation 组件的文件
+php bin/hyperf.php vendor:publish hyperf/translation
+// 发布验证器组件的文件
+php bin/hyperf.php vendor:publish hyperf/validation
 ```
 
 ## 使用说明
