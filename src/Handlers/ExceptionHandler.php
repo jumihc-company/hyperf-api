@@ -78,6 +78,9 @@ class ExceptionHandler extends \Hyperf\ExceptionHandler\ExceptionHandler
 
     public function handle(Throwable $throwable, ResponseInterface $response)
     {
+        // 重置属性
+        $this->resetProperty();
+
         // 设置响应数据
         $this->response($throwable);
 
@@ -126,6 +129,17 @@ class ExceptionHandler extends \Hyperf\ExceptionHandler\ExceptionHandler
     public function isValid(Throwable $throwable): bool
     {
         return true;
+    }
+
+    /**
+     * 重置属性
+     */
+    protected function resetProperty()
+    {
+        $this->code = ResultCode::ERROR;
+        $this->msg = ResultMsg::ERROR;
+        $this->data = null;
+        $this->httpCode = ResultCode::HTTP_ERROR_CODE;
     }
 
     protected function response(Throwable $e)
