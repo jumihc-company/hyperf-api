@@ -32,7 +32,7 @@ class RedisLock
     public function __construct(Redis $redis, string $key, int $seconds)
     {
         $this->redis = $redis;
-        $this->key = $key;
+        $this->key = Helper::getRedisPrefix() . $key;
         $this->seconds = $seconds;
     }
 

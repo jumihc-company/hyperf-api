@@ -47,6 +47,12 @@ class CheckSignatureMiddleware implements MiddlewareInterface
      */
     protected $log;
 
+    /**
+     * redis 缓存前缀
+     * @var string
+     */
+    protected $redisPrefix;
+
     public function __construct(
         RequestInterface $request,
         ConfigInterface $configInterface,
@@ -57,6 +63,7 @@ class CheckSignatureMiddleware implements MiddlewareInterface
         $this->request = $request;
         $this->configInterface = $configInterface;
         $this->redis = $redis;
+        $this->redisPrefix = Helper::getRedisPrefix();
         $this->log = $log;
     }
 
@@ -113,7 +120,7 @@ class CheckSignatureMiddleware implements MiddlewareInterface
         $nonce .= $timestamp;
 
         // 缓存标识
-        $cacheKey = 'nonce-list-' . $timeout;
+        $cacheKey = $this->redisPrefix . 'nonce-list-' . $timeout;
 
         // 获取已缓存随机数列表
         $list = $this->redis->lrange($cacheKey, 0, -1);

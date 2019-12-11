@@ -26,6 +26,12 @@ class SdlCache
     protected $redis;
 
     /**
+     * redis 缓存前缀
+     * @var string
+     */
+    protected $redisPrefix;
+
+    /**
      * 缓存key
      * @var string
      */
@@ -44,6 +50,7 @@ class SdlCache
     {
         $this->configInterface = $configInterface;
         $this->redis = $redis;
+        $this->redisPrefix = Helper::getRedisPrefix();
     }
 
     /**
@@ -100,7 +107,7 @@ class SdlCache
      */
     protected function getCacheKey(int $id)
     {
-        return sprintf($this->cacheKey, $id);
+        return $this->redisPrefix . sprintf($this->cacheKey, $id);
     }
 
     /**
@@ -110,6 +117,6 @@ class SdlCache
      */
     protected function getCacheTempKey(int $id)
     {
-        return sprintf($this->cacheTempKey, $id);
+        return $this->redisPrefix . sprintf($this->cacheTempKey, $id);
     }
 }

@@ -20,6 +20,12 @@ class SmsCache
     protected $redis;
 
     /**
+     * redis 缓存前缀
+     * @var string
+     */
+    protected $redisPrefix;
+
+    /**
      * @var string
      */
     protected $codeCacheKey = 'sms_code_cache_%s';
@@ -70,6 +76,7 @@ class SmsCache
     )
     {
         $this->redis = $redis;
+        $this->redisPrefix = Helper::getRedisPrefix();
 
         if (! empty($interval)) {
             $this->interval = $interval;
@@ -218,7 +225,7 @@ class SmsCache
      */
     protected function getCodeCacheKey(string $phone, string $type)
     {
-        return sprintf(
+        return $this->redisPrefix . sprintf(
             $this->codeCacheKey,
             ! empty($type) ? $type . '_' . $phone : $phone
         );
@@ -232,7 +239,7 @@ class SmsCache
      */
     protected function getNumCacheKey(string $phone, string $type)
     {
-        return sprintf(
+        return $this->redisPrefix . sprintf(
             $this->numCacheKey,
             ! empty($type) ? $type . '_' . $phone : $phone
         );

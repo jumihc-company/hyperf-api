@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Utils;
 
+use Hyperf\Contract\ConfigInterface;
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\Utils\Arr;
 use Psr\Http\Message\RequestInterface;
@@ -32,6 +33,20 @@ class Helper
         }
 
         return $container->get($id);
+    }
+
+    /**
+     * 获取 redis 缓存前缀
+     * @param string $pool
+     * @return string
+     */
+    public static function getRedisPrefix(string $pool = 'default')
+    {
+        $configInterface = ApplicationContext::getContainer()->get(ConfigInterface::class);
+        return (string) $configInterface->get(
+            sprintf('redis.%s.prefix', $pool),
+            $configInterface->get('app_name', '')
+        );
     }
 
     /**
