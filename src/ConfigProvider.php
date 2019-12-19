@@ -65,6 +65,12 @@ class ConfigProvider
                     'destination' => config_autoload_path( 'jmhc-build-file.php'),
                 ],
                 [
+                    'id' => 'config-jmhc-sms',
+                    'description' => 'SMS profile.',
+                    'source' => jmhc_api_config_path('jmhc-sms.php'),
+                    'destination' => config_autoload_path('jmhc-sms.php'),
+                ],
+                [
                     'id' => 'database-users',
                     'description' => 'User table migration file.',
                     'source' => jmhc_api_database_path('migrations/2019_11_21_151645_create_users_table.php'),
