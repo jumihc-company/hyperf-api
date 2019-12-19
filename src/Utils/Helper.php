@@ -62,7 +62,7 @@ class Helper
             'cache' => make(SmsCache::class, [
                 'pool' => $pool,
             ]),
-            'config' => $configInterface->get(ConfigInterface::class)->get('sms'),
+            'config' => $configInterface->get('sms', []),
         ]);
     }
 
