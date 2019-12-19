@@ -38,7 +38,8 @@
         "hyperf/db-connection": "~1.1.0",
         "hyperf/validation": "~1.1.0",
         "doctrine/dbal": "^2.10",
-        "jmhc/mongodb": "dev-master"
+        "jmhc/mongodb": "dev-master",
+        "jmhc/sms": "dev-master"
     },
     "extra": {
         "hyperf": {

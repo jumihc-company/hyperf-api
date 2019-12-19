@@ -9,6 +9,7 @@ namespace Jmhc\Restful\Utils;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Utils\ApplicationContext;
 use Hyperf\Utils\Arr;
+use Jmhc\Sms\Sms;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -47,6 +48,36 @@ class Helper
             sprintf('redis.%s.prefix', $pool),
             $configInterface->get('app_name', '')
         );
+    }
+
+    /**
+     * 获取发送短信实例
+     * @param string $pool
+     * @return Sms
+     */
+    public static function getSms(string $pool = 'default')
+    {
+        $configInterface = ApplicationContext::getContainer()->get(ConfigInterface::class);
+        return make(Sms::class, [
+            'cache' => make(SmsCache::class, [
+                'pool' => $pool,
+            ]),
+            'config' => $configInterface->get(ConfigInterface::class)->get('sms'),
+        ]);
+    }
+
+    /**
+     * 获取发送短信缓存
+     * @param string $pool
+     * @return \Jmhc\Sms\Utils\SmsCache
+     */
+    public static function getSmsCache(string $pool = 'default')
+    {
+        return make(\Jmhc\Sms\Utils\SmsCache::class, [
+            'cache' => make(SmsCache::class, [
+                'pool' => $pool,
+            ]),
+        ]);
     }
 
     /**

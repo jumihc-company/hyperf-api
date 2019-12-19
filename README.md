@@ -39,7 +39,6 @@
 	    - [FileSize.php](#filesizephp)
 	    - [Log.php](#logphp)
 	    - [Sdl.php](#sdlphp)
-	    - [SmsCache.php](#smscachephp)
 	    - [Token.php](#tokenphp)
 
 ## 安装配置
@@ -400,12 +399,6 @@ FileSize::get('2g');
 > `Jmhc\Restful\Utils\Sdl`
 >
 > 单设备登录类
-
-#### SmsCache.php
-
-> `Jmhc\Restful\Utils\SmsCache`
->
-> 发送短信缓存类
 
 #### Token.php
 
