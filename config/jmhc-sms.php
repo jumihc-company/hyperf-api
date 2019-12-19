@@ -22,7 +22,6 @@ return [
         'chuanglan' => [
             'account' => env('CHUANGLAN_ACCOUNT'),
             'password' => env('CHUANGLAN_PASSWORD'),
-            'content' => env('CHUANGLAN_CONTENT'),
 
             // 国际短信时必填
             'intel_account' => '',
