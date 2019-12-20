@@ -52,15 +52,15 @@ class Helper
 
     /**
      * 获取发送短信实例
-     * @param string $pool
+     * @param string $redisPool
      * @return Sms
      */
-    public static function getSms(string $pool = 'default')
+    public static function getSms(string $redisPool = 'default')
     {
         $configInterface = ApplicationContext::getContainer()->get(ConfigInterface::class);
         return make(Sms::class, [
             'cache' => make(SmsCache::class, [
-                'pool' => $pool,
+                'pool' => $redisPool,
             ]),
             'config' => $configInterface->get('jmhc-sms', []),
         ]);
