@@ -33,6 +33,18 @@ class MakeControllerCommand extends MakeCommand
     protected $stubPath = __DIR__ . '/stubs/controller.stub';
 
     /**
+     * 设置参数、选项
+     */
+    protected function setArgumentOption()
+    {
+        parent::setArgumentOption();
+
+        // 引入、继承类
+        $this->uses = PHP_EOL . 'use ' . $this->optionControllerExtendsCustom . ';';
+        $this->extends = ' extends ' . class_basename($this->optionControllerExtendsCustom);
+    }
+
+    /**
      * 命令配置
      */
     protected function configure()

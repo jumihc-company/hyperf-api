@@ -64,6 +64,12 @@ class MakeFactoryCommand extends MakeCommand
     protected $optionScanDir;
 
     /**
+     * 选项 factory-extends-custom
+     * @var string
+     */
+    protected $optionFactoryExtendsCustom;
+
+    /**
      * 构建操作
      */
     protected function buildHandle()
@@ -91,7 +97,9 @@ class MakeFactoryCommand extends MakeCommand
         // 替换
         $this->replaceNamespace($content, $this->namespace)
             ->replaceClass($content, $this->class)
-            ->replaceAnnotations($content, $this->annotation);
+            ->replaceUses($content, $this->uses)
+            ->replaceAnnotations($content, $this->annotation)
+            ->replaceExtends($content, $this->extends);
 
         return $content;
     }
@@ -175,6 +183,11 @@ class MakeFactoryCommand extends MakeCommand
         $this->optionDir = $this->filterOptionDir($this->option('dir'));
         $this->optionForce = $this->option('force');
         $this->optionSuffix = $this->option('suffix');
+        $this->optionFactoryExtendsCustom = $this->getCommandClass($this->option('factory-extends-custom'));
+
+        // 引入、继承类
+        $this->uses = PHP_EOL . 'use ' . $this->optionFactoryExtendsCustom . ';';
+        $this->extends = ' extends ' . class_basename($this->optionFactoryExtendsCustom);
     }
 
     /**
@@ -188,5 +201,6 @@ class MakeFactoryCommand extends MakeCommand
         $this->addOption('dir', null, InputOption::VALUE_REQUIRED, 'File saving path, relative to app directory', $this->defaultDir);
         $this->addOption('force', 'f', InputOption::VALUE_NONE, 'Overwrite existing files');
         $this->addOption('suffix', 's', InputOption::VALUE_NONE, sprintf('Add the `%s` suffix', $this->entityName));
+        $this->addOption('factory-extends-custom', null, InputOption::VALUE_REQUIRED, 'The custom factory inherits its parent class', 'Jmhc\Restful\Factory\BaseFactory');
     }
 }

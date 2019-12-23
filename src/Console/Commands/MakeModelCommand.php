@@ -291,9 +291,9 @@ class MakeModelCommand extends MakeCommand
             return str_replace($this->prefix, '', $v);
         }, $this->option('table'));
 
-        // 继承基础模型
-        $this->uses = PHP_EOL . 'use Jmhc\Restful\Models\BaseModel;';
-        $this->extends = ' extends BaseModel';
+        // 引入、继承类
+        $this->uses = PHP_EOL . 'use ' . $this->optionModelExtendsCustom . ';';
+        $this->extends = ' extends ' . class_basename($this->optionModelExtendsCustom);
 
         if ($this->optionModelExtendsPivot) {
             // 继承中间模型

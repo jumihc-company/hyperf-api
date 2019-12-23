@@ -1,7 +1,6 @@
 <?php
 namespace %NAMESPACE%;
-
-use Jmhc\Restful\Controllers\BaseController;
-
-class %CLASS% extends BaseController
+%USES%
+%ANNOTATIONS%
+class %CLASS%%EXTENDS%
 {}

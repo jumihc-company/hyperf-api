@@ -1,7 +1,6 @@
 <?php
 namespace %NAMESPACE%;
-
-use Jmhc\Restful\Services\BaseService;
-
-class %CLASS% extends BaseService
+%USES%
+%ANNOTATIONS%
+class %CLASS%%EXTENDS%
 {}

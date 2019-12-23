@@ -69,6 +69,18 @@ abstract class MakeCommand extends Command
     protected $class;
 
     /**
+     * 导入对象
+     * @var string
+     */
+    protected $uses;
+
+    /**
+     * 继承对象
+     * @var string
+     */
+    protected $extends;
+
+    /**
      * 保存文件路径
      * @var string
      */
@@ -105,16 +117,34 @@ abstract class MakeCommand extends Command
     protected $optionSuffix;
 
     /**
-     * 选项 model_extends_pivot
+     * 选项 model-extends-pivot
      * @var bool
      */
     protected $optionModelExtendsPivot;
 
     /**
-     * 选项 model_extends_mongo
+     * 选项 model-extends-mongo
      * @var bool
      */
     protected $optionModelExtendsMongo;
+
+    /**
+     * 选项 controller-extends-custom
+     * @var string
+     */
+    protected $optionControllerExtendsCustom;
+
+    /**
+     * 选项 model-extends-custom
+     * @var string
+     */
+    protected $optionModelExtendsCustom;
+
+    /**
+     * 选项 service-extends-custom
+     * @var string
+     */
+    protected $optionServiceExtendsCustom;
 
     public function __construct()
     {
@@ -235,7 +265,9 @@ abstract class MakeCommand extends Command
 
         // 替换
         $this->replaceNamespace($content, $this->namespace)
-            ->replaceClass($content, $this->class);
+            ->replaceClass($content, $this->class)
+            ->replaceUses($content, $this->uses)
+            ->replaceExtends($content, $this->extends);
 
         return $content;
     }
@@ -256,6 +288,9 @@ abstract class MakeCommand extends Command
             '--suffix' => $this->optionSuffix,
             '--model-extends-pivot' => $this->optionModelExtendsPivot,
             '--model-extends-mongo' => $this->optionModelExtendsMongo,
+            '--controller-extends-custom' => $this->optionControllerExtendsCustom,
+            '--model-extends-custom' => $this->optionModelExtendsCustom,
+            '--service-extends-custom' => $this->optionServiceExtendsCustom,
         ];
         // 保存路径
         $saveDir = $this->getSaveDir();
@@ -316,6 +351,9 @@ abstract class MakeCommand extends Command
         $this->optionSuffix = $this->option('suffix');
         $this->optionModelExtendsPivot = $this->option('model-extends-pivot');
         $this->optionModelExtendsMongo = $this->option('model-extends-mongo');
+        $this->optionControllerExtendsCustom = $this->getCommandClass($this->option('controller-extends-custom'));
+        $this->optionModelExtendsCustom = $this->getCommandClass($this->option('model-extends-custom'));
+        $this->optionServiceExtendsCustom = $this->getCommandClass($this->option('service-extends-custom'));
     }
 
     /**
@@ -332,5 +370,8 @@ abstract class MakeCommand extends Command
         $this->addOption('migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name');
         $this->addOption('model-extends-pivot', null, InputOption::VALUE_NONE, 'The model extends Jmhc\Restful\Models\BasePivot');
         $this->addOption('model-extends-mongo', null, InputOption::VALUE_NONE, 'The model extends Jmhc\Restful\Models\BaseMongo');
+        $this->addOption('controller-extends-custom', null, InputOption::VALUE_REQUIRED, 'The custom controller inherits its parent class', 'Jmhc\Restful\Controllers\BaseController');
+        $this->addOption('model-extends-custom', null, InputOption::VALUE_REQUIRED, 'The custom model inherits its parent class', 'Jmhc\Restful\Models\BaseModel');
+        $this->addOption('service-extends-custom', null, InputOption::VALUE_REQUIRED, 'The custom service inherits its parent class', 'Jmhc\Restful\Services\BaseService');
     }
 }

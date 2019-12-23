@@ -108,16 +108,34 @@ class MakeWithFileCommand extends Command
     protected $optionMigration;
 
     /**
-     * 选项 model_extends_pivot
+     * 选项 model-extends-pivot
      * @var bool
      */
     protected $optionModelExtendsPivot;
 
     /**
-     * 选项 model_extends_mongo
+     * 选项 model-extends-mongo
      * @var bool
      */
     protected $optionModelExtendsMongo;
+
+    /**
+     * 选项 controller-extends-custom
+     * @var string
+     */
+    protected $optionControllerExtendsCustom;
+
+    /**
+     * 选项 model-extends-custom
+     * @var string
+     */
+    protected $optionModelExtendsCustom;
+
+    /**
+     * 选项 service-extends-custom
+     * @var string
+     */
+    protected $optionServiceExtendsCustom;
 
     public function __construct(string $name = null)
     {
@@ -181,6 +199,9 @@ class MakeWithFileCommand extends Command
             '--suffix' => $this->optionSuffix,
             '--model-extends-pivot' => $this->optionModelExtendsPivot,
             '--model-extends-mongo' => $this->optionModelExtendsMongo,
+            '--controller-extends-custom' => $this->optionControllerExtendsCustom,
+            '--model-extends-custom' => $this->optionModelExtendsCustom,
+            '--service-extends-custom' => $this->optionServiceExtendsCustom,
         ];
 
         // 创建控制器
@@ -232,6 +253,9 @@ class MakeWithFileCommand extends Command
         $this->optionMigration = $this->option('migration');
         $this->optionModelExtendsPivot = $this->option('model-extends-pivot');
         $this->optionModelExtendsMongo = $this->option('model-extends-mongo');
+        $this->optionControllerExtendsCustom = $this->getCommandClass($this->option('controller-extends-custom'));
+        $this->optionModelExtendsCustom = $this->getCommandClass($this->option('model-extends-custom'));
+        $this->optionServiceExtendsCustom = $this->getCommandClass($this->option('service-extends-custom'));
     }
 
     /**
@@ -252,5 +276,8 @@ class MakeWithFileCommand extends Command
         $this->addOption('migration', null, InputOption::VALUE_NONE, 'Generate the migration file with the same name');
         $this->addOption('model-extends-pivot', null, InputOption::VALUE_NONE, 'The model extends Jmhc\Restful\Models\BasePivot');
         $this->addOption('model-extends-mongo', null, InputOption::VALUE_NONE, 'The model extends Jmhc\Restful\Models\BaseMongo');
+        $this->addOption('controller-extends-custom', null, InputOption::VALUE_REQUIRED, 'The custom controller inherits its parent class', 'Jmhc\Restful\Controllers\BaseController');
+        $this->addOption('model-extends-custom', null, InputOption::VALUE_REQUIRED, 'The custom model inherits its parent class', 'Jmhc\Restful\Models\BaseModel');
+        $this->addOption('service-extends-custom', null, InputOption::VALUE_REQUIRED, 'The custom service inherits its parent class', 'Jmhc\Restful\Services\BaseService');
     }
 }

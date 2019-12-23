@@ -100,6 +100,16 @@ trait MakeTrait
     }
 
     /**
+     * 获取命令行类名称
+     * @param string $name
+     * @return string
+     */
+    protected function getCommandClass(string $name)
+    {
+        return str_replace('/', '\\', trim($name, '/'));
+    }
+
+    /**
      * 运行完成
      */
     protected function runComplete()
