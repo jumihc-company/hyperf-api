@@ -3,6 +3,7 @@
 return [
     // 异常文件名称
     'db_exception_file_name' => env('JMHC_DB_EXCEPTION_FILE_NAME', 'handle_db.exception'),
+    'sms_exception_file_name' => env('JMHC_SMS_EXCEPTION_FILE_NAME', 'sms.exception'),
     'exception_file_name' => env('JMHC_EXCEPTION_FILE_NAME', 'handle.exception'),
     'error_file_name' => env('JMHC_ERROR_FILE_NAME', 'handle.error'),
 

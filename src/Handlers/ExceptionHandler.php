@@ -11,6 +11,7 @@ use ErrorException;
 use Hyperf\Contract\ConfigInterface;
 use Hyperf\Database\Exception\QueryException;
 use Hyperf\HttpServer\Contract\RequestInterface;
+use Hyperf\Validation\ValidationException;
 use Jmhc\Restful\Exceptions\ResultException;
 use Jmhc\Restful\ResultCode;
 use Jmhc\Restful\ResultMsg;
@@ -18,7 +19,10 @@ use Jmhc\Restful\Utils\Cipher;
 use Jmhc\Restful\Utils\LogHelper;
 use Jmhc\Restful\Utils\RedisLock;
 use Jmhc\Restful\Utils\Token;
+use Jmhc\Sms\Exceptions\SmsException;
 use LogicException;
+use Overtrue\EasySms\Exceptions\InvalidArgumentException;
+use Overtrue\EasySms\Exceptions\NoGatewayAvailableException;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionException;
 use RuntimeException;
@@ -158,6 +162,19 @@ class ExceptionHandler extends \Hyperf\ExceptionHandler\ExceptionHandler
                 $this->configInterface->get('jmhc-api.db_exception_file_name', 'handle_db.exception'),
                 $e
             );
+        } elseif ($e instanceof ValidationException) {
+            // 验证器异常
+            $this->msg = $e->validator->errors()->first();
+        } elseif ($e instanceof InvalidArgumentException || $e instanceof NoGatewayAvailableException) {
+            // easySms 短信异常
+            LogHelper::get()->save(
+                $this->configInterface->get('jmhc-api.sms_exception_file_name', 'sms.exception'),
+                $e->getMessage() . PHP_EOL . $e->getTraceAsString() . PHP_EOL . json_encode($e->getExceptions(), JSON_UNESCAPED_UNICODE)
+            );
+        } elseif ($e instanceof SmsException) {
+            // 短信异常
+            $this->msg = $e->getMessage();
+            $this->data = $e->getData();
         } elseif ($e instanceof ReflectionException || $e instanceof LogicException || $e instanceof RuntimeException) {
             // 反射、逻辑、运行异常
             $this->code = ResultCode::SYS_EXCEPTION;

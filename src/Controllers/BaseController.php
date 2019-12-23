@@ -7,7 +7,6 @@
 namespace Jmhc\Restful\Controllers;
 
 use Jmhc\Restful\Traits\RequestInfoTrait;
-use Jmhc\Restful\Traits\ResourceControllerTrait;
 use Jmhc\Restful\Traits\UserInfoTrait;
 
 /**
@@ -16,7 +15,6 @@ use Jmhc\Restful\Traits\UserInfoTrait;
  */
 class BaseController
 {
-    use ResourceControllerTrait;
     use RequestInfoTrait;
     use UserInfoTrait;
 }

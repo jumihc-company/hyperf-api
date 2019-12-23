@@ -3,6 +3,8 @@
 JMHC_EXCEPTION_FILE_NAME=handle.exception
 # 数据库查询异常文件名称
 JMHC_DB_EXCEPTION_FILE_NAME=handle_db.exception
+# 短信异常文件名称
+JMHC_SMS_EXCEPTION_FILE_NAME=sms.exception
 # 错误文件名称
 JMHC_ERROR_FILE_NAME=handle.error
 ```
