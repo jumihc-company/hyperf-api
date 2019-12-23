@@ -152,6 +152,7 @@ abstract class MakeCommand extends Command
             $this->description,
             strtolower($this->entityName)
         );
+        $this->setDescription($this->description);
 
         parent::__construct();
     }
