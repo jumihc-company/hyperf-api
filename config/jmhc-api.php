@@ -1,6 +1,8 @@
 <?php
 
 return [
+    // 异常调试模式
+    'exception_debug' => env('JMHC_EXCEPTION_DEBUG', true),
     // 异常文件名称
     'db_exception_file_name' => env('JMHC_DB_EXCEPTION_FILE_NAME', 'handle_db.exception'),
     'sms_exception_file_name' => env('JMHC_SMS_EXCEPTION_FILE_NAME', 'sms.exception'),

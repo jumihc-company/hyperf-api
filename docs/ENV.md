@@ -1,4 +1,6 @@
 ```apacheconfig
+# 异常调试模式
+JMHC_EXCEPTION_DEBUG=true
 # 反射、逻辑、运行异常文件名称
 JMHC_EXCEPTION_FILE_NAME=handle.exception
 # 数据库查询异常文件名称
