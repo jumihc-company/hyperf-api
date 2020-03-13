@@ -12,6 +12,9 @@ return [
     // 单设备登录临时缓存过期时间（秒）
     'sdl_tmp_expire' => env('JMHC_SDL_TMP_EXPIRE', 10),
 
+    // 短信发送锁定时间（秒）
+    'sms_send_lock_seconds' => env('JMHC_SMS_SEND_LOCK_SECONDS', 5),
+
     // 跨域配置
     'cors' => [
         'Access-Control-Allow-Origin' => '*',

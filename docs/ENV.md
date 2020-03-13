@@ -12,6 +12,11 @@ JMHC_ERROR_FILE_NAME=handle.error
 ```
 
 ```apacheconfig
+# 短信发送锁定时间（秒）
+JMHC_SMS_SEND_LOCK_SECONDS=5
+```
+
+```apacheconfig
 # 是否允许保存debug日志
 JMHC_LOG_DEBUG=true
 # 日志保存路径

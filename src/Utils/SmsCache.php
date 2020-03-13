@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Utils;
 
+use Hyperf\Contract\ConfigInterface;
 use Hyperf\Redis\Redis;
 use Jmhc\Sms\Contracts\CacheInterface;
 
@@ -17,13 +18,19 @@ class SmsCache implements CacheInterface
     protected $redis;
 
     /**
+     * @var ConfigInterface
+     */
+    protected $configInterface;
+
+    /**
      * @var string
      */
     protected $prefix;
 
-    public function __construct(Redis $redis, string $pool = 'default')
+    public function __construct(Redis $redis, ConfigInterface $configInterface, string $pool = 'default')
     {
         $this->redis = $redis;
+        $this->configInterface = $configInterface;
         $this->prefix = Helper::getRedisPrefix($pool);
     }
 
@@ -65,6 +72,25 @@ class SmsCache implements CacheInterface
     public function del(string $key): bool
     {
         return !! $this->redis->del($this->getCacheKey($key));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function lock(string $key): bool
+    {
+        return $this->redis->set($key, 1, [
+            'nx',
+            'ex' => $this->configInterface->get('jmhc-api.sms_send_lock_seconds', 5),
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function unlock(string $key): bool
+    {
+        return $this->del($key);
     }
 
     /**
