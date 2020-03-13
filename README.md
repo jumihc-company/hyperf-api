@@ -20,6 +20,7 @@
 	    - [创建模型](#%E5%88%9B%E5%BB%BA%E6%A8%A1%E5%9E%8B)
 	    - [通过文件创建所需文件](#%E9%80%9A%E8%BF%87%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BA%E6%89%80%E9%9C%80%E6%96%87%E4%BB%B6)
 	    - [生成工厂文件](%23%E7%94%9F%E6%88%90%E5%B7%A5%E5%8E%82%E6%96%87%E4%BB%B6)
+	    - [维护模式](%23%E7%BB%B4%E6%8A%A4%E6%A8%A1%E5%BC%8F)
 	- [中间件](#%E4%B8%AD%E9%97%B4%E4%BB%B6-1)
 	- [异常处理](#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-1)
 	- [验证规则](#%E9%AA%8C%E8%AF%81%E8%A7%84%E5%88%99)
@@ -163,13 +164,13 @@ class TestController extends BaseController
 
 ```php
 // 创建 Test 控制器位于 app/Http/Controllers/Test.php
-php artisan jmhc-api:make-controller test
+php bin/hyperf.php jmhc-api:make-controller test
 // 创建 Test 控制器修改继承父类
-php artisan jmhc-api:make-controller test --controller-extends-custom App/BaseController
+php bin/hyperf.php jmhc-api:make-controller test --controller-extends-custom App/BaseController
 // 创建 Test 控制器并添加后缀，位于 app/Http/Controllers/TestController.php
-php artisan jmhc-api:make-controller test -s
+php bin/hyperf.php jmhc-api:make-controller test -s
 // 创建 Test 控制器位于 app/Http/Index/Controllers/Test.php
-php artisan jmhc-api:make-controller test -m index
+php bin/hyperf.php jmhc-api:make-controller test -m index
 ...
 ```
 
@@ -181,13 +182,13 @@ php artisan jmhc-api:make-controller test -m index
 
 ```php
 // 创建 Test 服务位于 app/Http/Services/Test.php
-php artisan jmhc-api:make-service test
+php bin/hyperf.php jmhc-api:make-service test
 // 创建 Test 服务修改继承父类
-php artisan jmhc-api:make-service test --service-extends-custom App\BaseService
+php bin/hyperf.php jmhc-api:make-service test --service-extends-custom App\BaseService
 // 创建 Test 服务并添加后缀，位于 app/Http/Services/TestService.php
-php artisan jmhc-api:make-service test -s
+php bin/hyperf.php jmhc-api:make-service test -s
 // 创建 Test 服务位于 app/Http/Index/Services/Test.php
-php artisan jmhc-api:make-service test -m index
+php bin/hyperf.php jmhc-api:make-service test -m index
 ...
 ```
 
@@ -199,15 +200,15 @@ php artisan jmhc-api:make-service test -m index
 
 ```php
 // 创建公用模型位于 app/Common/Models 并排除 test，foos 表
-php artisan jmhc-api:make-model --dir Common/Models -t test -t foos
+php bin/hyperf.php jmhc-api:make-model --dir Common/Models -t test -t foos
 // 创建 Test 模型位于 app/Http/Models/Test.php
-php artisan jmhc-api:make-model test
+php bin/hyperf.php jmhc-api:make-model test
 // 创建 Test 模型修改继承父类
-php artisan jmhc-api:make-model test --model-extends-custom App\BaseModel
+php bin/hyperf.php jmhc-api:make-model test --model-extends-custom App\BaseModel
 // 创建 Test 服务并添加后缀，位于 app/Http/Models/TestModel.php
-php artisan jmhc-api:make-model test -s
+php bin/hyperf.php jmhc-api:make-model test -s
 // 创建 Test 模型位于 app/Http/Index/Models/Test.php
-php artisan jmhc-api:make-model test -m index
+php bin/hyperf.php jmhc-api:make-model test -m index
 ...
 ```
 
@@ -219,11 +220,11 @@ php artisan jmhc-api:make-model test -m index
 
 ```php
 // 生成控制器、模型、服务、迁移、填充
-php artisan jmhc-api:make-with-file --controller --model --service --migration
+php bin/hyperf.php jmhc-api:make-with-file --controller --model --service --migration
 // 覆盖生成所有文件
-php artisan jmhc-api:make-with-file -f
+php bin/hyperf.php jmhc-api:make-with-file -f
 // 覆盖生成控制器
-php artisan jmhc-api:make-with-file --force-controller
+php bin/hyperf.php jmhc-api:make-with-file --force-controller
 ...
 ```
 
@@ -231,11 +232,23 @@ php artisan jmhc-api:make-with-file --force-controller
 
 ```php
 // 通过指定目录创建factory,位于 app/Http/Common/Factory/Service.php
-php artisan jmhc-api:make-factory service --scan-dir Http/Services --scan-dir Http/Index/Services
+php bin/hyperf.php jmhc-api:make-factory service --scan-dir Http/Services --scan-dir Http/Index/Services
 
 // 通过指定目录创建factory,并增加后缀、保存至其他路径,位于 app/Http/Commons/Factory/ServiceFactory.php
-php artisan jmhc-api:make-factory service --scan-dir Http/Services --dir Commons/Factory -s
+php bin/hyperf.php jmhc-api:make-factory service --scan-dir Http/Services --dir Commons/Factory -s
 ...
+```
+
+#### 维护模式
+```php
+// 开启维护模式
+php bin/hyperf.php jmhc-api:down
+
+// 开启维护模式，并设置维护消息
+php bin/hyperf.php jmhc-api:down --message 服务器维护中
+
+// 关闭维护模式
+php bin/hyperf.php jmhc-api:up
 ```
 
 ### 中间件
@@ -255,6 +268,7 @@ php artisan jmhc-api:make-factory service --scan-dir Http/Services --dir Commons
 | `Jmhc\Restful\Middleware\CheckSignatureMiddleware` | 验证请求签名 | --- |
 | `Jmhc\Restful\Middleware\CheckTokenMiddleware` | 检测token，设置用户数据 | `Jmhc\Restful\Contracts\UserModelInterface`<br />`Jmhc\Restful\Models\UserModel` |
 | `Jmhc\Restful\Middleware\CheckSdlMiddleware` | 单设备登录，需要复写 `Jmhc\Restful\Handlers\ExceptionHandler->sdlHandler()` | --- |
+| `Jmhc\Restful\Middleware\CheckForMaintenanceModeMiddleware` | 检测维护模式 | 以应用在全局中间件 |
 
 ### 异常处理
 
