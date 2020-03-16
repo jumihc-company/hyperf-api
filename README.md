@@ -268,7 +268,7 @@ php bin/hyperf.php jmhc-api:up
 | `Jmhc\Restful\Middleware\CheckSignatureMiddleware` | 验证请求签名 | --- |
 | `Jmhc\Restful\Middleware\CheckTokenMiddleware` | 检测token，设置用户数据 | `Jmhc\Restful\Contracts\UserModelInterface`<br />`Jmhc\Restful\Models\UserModel` |
 | `Jmhc\Restful\Middleware\CheckSdlMiddleware` | 单设备登录，需要复写 `Jmhc\Restful\Handlers\ExceptionHandler->sdlHandler()` | --- |
-| `Jmhc\Restful\Middleware\CheckForMaintenanceModeMiddleware` | 检测维护模式 | 以应用在全局中间件 |
+| `Jmhc\Restful\Middleware\CheckForMaintenanceModeMiddleware` | 检测维护模式 | 默认应用在 `http` 服务全局中间件 |
 
 ### 异常处理
 
