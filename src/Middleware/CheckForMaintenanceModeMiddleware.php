@@ -6,6 +6,7 @@
 
 namespace Jmhc\Restful\Middleware;
 
+use Hyperf\HttpServer\Contract\RequestInterface;
 use Hyperf\Utils\Str;
 use Jmhc\Restful\Exceptions\MaintenanceModeException;
 use Jmhc\Restful\ResultMsg;
@@ -21,10 +22,20 @@ class CheckForMaintenanceModeMiddleware implements MiddlewareInterface
     const FILE_NAME = 'runtime/down.cache';
 
     /**
+     * @var RequestInterface
+     */
+    protected $request;
+
+    /**
      * 在启用维护模式时应该可以访问的uri
      * @var array
      */
     protected $except = [];
+
+    public function __construct(RequestInterface $request)
+    {
+        $this->request = $request;
+    }
 
     /**
      * @inheritDoc
@@ -34,11 +45,11 @@ class CheckForMaintenanceModeMiddleware implements MiddlewareInterface
         if (file_exists(base_path(self::FILE_NAME))) {
             $data = json_decode(file_get_contents(base_path(self::FILE_NAME)), true);
 
-            if (isset($data['allowed']) && IpUtils::checkIp(Helper::ip($request), (array) $data['allowed'])) {
+            if (isset($data['allowed']) && IpUtils::checkIp(Helper::ip($this->request), (array) $data['allowed'])) {
                 return $handler->handle($request);
             }
 
-            if ($this->inExceptArray($request)) {
+            if ($this->inExceptArray($this->request)) {
                 return $handler->handle($request);
             }
 

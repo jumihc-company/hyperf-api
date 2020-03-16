@@ -15,7 +15,6 @@ use Jmhc\Restful\Console\Commands\MakeWithFileCommand;
 use Jmhc\Restful\Console\Commands\UpCommand;
 use Jmhc\Restful\Contracts\UserModelInterface;
 use Jmhc\Restful\Contracts\VersionModelInterface;
-use Jmhc\Restful\Middleware\CheckForMaintenanceModeMiddleware;
 use Jmhc\Restful\Middleware\CoreMiddleware;
 use Jmhc\Restful\Models\UserModel;
 use Jmhc\Restful\Models\VersionModel;
@@ -55,11 +54,6 @@ class ConfigProvider
                 MakeWithFileCommand::class,
                 DownCommand::class,
                 UpCommand::class,
-            ],
-            'middlewares' => [
-                'http' => [
-                    CheckForMaintenanceModeMiddleware::class,
-                ],
             ],
             'publish' => [
                 [
