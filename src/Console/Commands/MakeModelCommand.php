@@ -80,6 +80,12 @@ class MakeModelCommand extends MakeCommand
      */
     protected $prefix;
 
+    /**
+     * 表名称
+     * @var string
+     */
+    protected $table;
+
     public function __construct()
     {
         parent::__construct();
@@ -126,6 +132,8 @@ class MakeModelCommand extends MakeCommand
     {
         // 生成类名称
         $this->class = $this->getClass($name);
+        // 表名称
+        $this->table = $name;
 
         // 保存文件
         $this->saveFilePath = $this->dir . $this->class . '.php';
@@ -152,7 +160,7 @@ class MakeModelCommand extends MakeCommand
     {
         $content = file_get_contents($this->stubPath);
 
-        $table = Str::plural(Str::snake($this->class));
+        $table = Str::plural(Str::snake($this->table));
         [$annotation, $fillable, $dates, $casts] = $this->getReplaceData($this->dbHelper->getAllColumns($table));
 
         // 替换
